@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minuteur Intelligent NFC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #F9F8F3;
+      --color-blob: #E5F5F2;
+      --color-front: #C0ECE5;
+      --color-side: #7CD4C0;
+      --color-primary: #156C5E;
+      --color-secondary: #2A8B7E;
+      --shadow: 0 4px 12px rgba(42, 139, 126, 0.15);
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-primary);
+      line-height: 1.4;
+      padding: 0 16px;
+    }
+    .page {
+      max-width: 480px;
+      margin: 0 auto 4rem;
+      padding-top: 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    .page.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .button-feature {
+      position: relative;
+      display: block;
+      background-color: var(--color-secondary);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin: 1rem 0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      overflow: hidden;
+    }
+    .button-feature:hover,
+    .button-feature:focus-within {
+      background-color: var(--color-primary);
+    }
+    .dropdown-info {
+      max-height: 0;
+      overflow: hidden;
+      background-color: rgba(192, 236, 229, 0.9);
+      color: var(--color-primary);
+      padding: 0;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      margin-top: 0.5rem;
+      transition: max-height 0.5s ease, padding 0.5s ease;
+    }
+    .button-feature:hover .dropdown-info,
+    .button-feature:focus-within .dropdown-info,
+    .button-feature.active .dropdown-info {
+      max-height: 200px;
+      padding: 0.8rem;
+    }
+    .learn-more {
+      display: block;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s ease 0.2s;
+    }
+    .button-feature:hover .learn-more,
+    .button-feature.active .learn-more {
+      opacity: 1;
+    }
+    .button-cta {
+      display: block;
+      background-color: var(--color-secondary);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin: 2rem 0;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+    }
+    .button-cta:hover {
+      background-color: var(--color-primary);
+    }
+    .image-mid {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+    }
+    h2.swear {
+      font-size: 2rem;
+      text-align: center;
+      color: var(--color-secondary);
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Animation IntersectionObserver
+      const pages = document.querySelectorAll('.page');
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, { threshold: 0.1 });
+      pages.forEach(page => observer.observe(page));
+
+      // Dropdown mobile toggle
+      document.querySelectorAll('.button-feature').forEach(el => {
+        el.addEventListener('click', function() {
+          if (this.classList.contains('active')) {
+            const link = this.querySelector('.learn-more');
+            if (link) window.location.href = link.getAttribute('href');
+          } else {
+            this.classList.add('active');
+          }
+        });
+      });
+      document.addEventListener('click', evt => {
+        document.querySelectorAll('.button-feature.active').forEach(el => {
+          if (!el.contains(evt.target)) el.classList.remove('active');
+        });
+      });
+
+      // Gestion des ancres en JS
+      const anchors = document.querySelectorAll('.page[id]');
+      anchors.forEach(sec => sec.style.display = 'none');
+
+      function showSection(hash) {
+        const id = hash.slice(1);
+        const target = document.getElementById(id);
+        if (target) {
+          anchors.forEach(sec => sec.style.display = 'none');
+          target.style.display = 'block';
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
+      if (window.location.hash) showSection(window.location.hash);
+      window.addEventListener('hashchange', () => showSection(window.location.hash));
+    });
+  </script>
+
+  <!-- Intro -->
+  <div class="page">
+    <h1>Minuteur Intelligent NFC</h1>
+    <p>Gestion avancée du temps avec simplicité et hygiène optimale grâce au sans-contact NFC.</p>
+    <img src="images/WOP-2.png" alt="Minuteur NFC" class="image-mid">
+  </div>
+
+  <!-- Fonctions -->
+  <div class="page">
+    <div class="button-feature" tabindex="0">
+      Contrôle sans fil
+      <div class="dropdown-info">
+        <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct.</p>
+        <a class="learn-more" href="#wireless">En savoir plus →</a>
+      </div>
+    </div>
+    <div class="button-feature" tabindex="0">
+      Alarmes personnalisables
+      <div class="dropdown-info">
+        <p>Paramétrez des alarmes avec signaux sonores et visuels variés selon vos besoins.</p>
+        <a class="learn-more" href="#alarms">En savoir plus →</a>
+      </div>
+    </div>
+    <div class="button-feature" tabindex="0">
+      Hygiène renforcée
+      <div class="dropdown-info">
+        <p>Limitez les interactions manuelles, réduisant les risques sanitaires.</p>
+        <a class="learn-more" href="#hygiene">En savoir plus →</a>
+      </div>
+    </div>
+    <div class="button-feature" tabindex="0">
+      Multitâche avancé
+      <div class="dropdown-info">
+        <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages.</p>
+        <a class="learn-more" href="#multitasking">En savoir plus →</a>
+      </div>
+    </div>
+    <div class="button-feature" tabindex="0">
+      Absorption des chocs
+      <div class="dropdown-info">
+        <p>Conception robuste assurant une résistance accrue aux chocs et chutes.</p>
+        <a class="learn-more" href="#shock">En savoir plus →</a>
+      </div>
+    </div>
+    <div class="button-feature" tabindex="0">
+      Mode veille intelligent
+      <div class="dropdown-info">
+        <p>Économie d'énergie avec mode veille automatique prolongeant l'autonomie.</p>
+        <a class="learn-more" href="#sleep">En savoir plus →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ancres cul-de-sac -->
+  <div class="page" id="wireless"><h2 class="swear">Zut !</h2></div>
+  <div class="page" id="alarms"><h2 class="swear">Mince !</h2></div>
+  <div class="page" id="hygiene"><h2 class="swear">Flûte !</h2></div>
+  <div class="page" id="multitasking"><h2 class="swear">Pouah !</h2></div>
+  <div class="page" id="shock"><h2 class="swear">Pfiou !</h2></div>
+  <div class="page" id="sleep">
+    <img src="sleep.png" alt="Oh non !" class="image-mid">
+  </div>
+  <div class="page" id="prototype"><h2 class="swear">Zut alors !</h2></div>
+
+  <!-- Case prototype en fin de page -->
+  <div class="page footer-cta">
+    <h2>Intéressé par une démonstration ?</h2>
+    <p>Recevez gratuitement un prototype de notre minuteur intelligent NFC pour test.</p>
+    <a href="#prototype" class="button-cta">Demandez un prototype</a>
+  </div>
+
+</body>
+</html>
