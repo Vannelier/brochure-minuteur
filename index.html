@@ -183,6 +183,33 @@
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
   }
+.vote-feature {
+  display: none;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  background-color: var(--color-front);
+  color: var(--color-primary);
+  border: none;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+.button-feature.pinned .vote-feature {
+  display: block;
+}
+.vote-feature:hover {
+  background-color: var(--color-secondary);
+  color: white;
+}
+.vote-feature:disabled {
+  background-color: var(--color-blob);
+  color: var(--color-primary);
+  cursor: default;
+}
+
 </style>
 </head>
 <body>
@@ -199,42 +226,53 @@
   <h1>Novlease smart timer</h1>
   <p>Gestion avancée du temps avec simplicité et hygiène optimale grâce au sans-contact NFC.</p>
 
-  <div class="button-feature" tabindex="0">
-    Contrôle sans fil
+  <<div class="button-feature" tabindex="0">
+  Contrôle sans fil
+  <div class="dropdown-info">
+    <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
+  </div>
+  <button class="vote-feature" data-feature="Contrôle sans fil">Ça m'intéresse</button>
+</div>
 
-    <div class="dropdown-info">
-      <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
-    </div>
+<div class="button-feature" tabindex="0">
+  Alarmes personnalisables
+  <div class="dropdown-info">
+    <p>Paramétrez des alarmes avec signaux sonores personnalisés selon vos protocoles. Chaque tag peut mémoriser une séquence sonore personnalisée pour s’adapter à vos usages spécifiques.</p>
   </div>
-  <div class="button-feature" tabindex="0">
-    Alarmes personnalisables
-    <div class="dropdown-info">
-      <p>Paramétrez des alarmes avec signaux sonores personnalisés selon vos protocoles. Chaque tag peut mémoriser une séquence sonore personnalisée pour s’adapter à vos usages spécifiques.</p>
-    </div>
+  <button class="vote-feature" data-feature="Alarmes personnalisables">Ça m'intéresse</button>
+</div>
+
+<div class="button-feature" tabindex="0">
+  Hygiène renforcée
+  <div class="dropdown-info">
+    <p>Limitez les interactions manuelles, réduisant les risques de contaminations. Le contrôle sans contact réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
   </div>
-  <div class="button-feature" tabindex="0">
-    Hygiène renforcée
-    <div class="dropdown-info">
-      <p>Limitez les interactions manuelles, réduisant les risques de contaminations. Le contrôle sans contact réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
-    </div>
+  <button class="vote-feature" data-feature="Hygiène renforcée">Ça m'intéresse</button>
+</div>
+
+<div class="button-feature" tabindex="0">
+  Multitâche avancé
+  <div class="dropdown-info">
+    <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
   </div>
-  <div class="button-feature" tabindex="0">
-    Multitâche avancé
-    <div class="dropdown-info">
-      <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
-    </div>
+  <button class="vote-feature" data-feature="Multitâche avancé">Ça m'intéresse</button>
+</div>
+
+<div class="button-feature" tabindex="0">
+  Absorption des chocs
+  <div class="dropdown-info">
+    <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture de silicone.</p>
   </div>
-  <div class="button-feature" tabindex="0">
-    Absorption des chocs
-    <div class="dropdown-info">
-      <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture de silicone.</p>
-    </div>
+  <button class="vote-feature" data-feature="Absorption des chocs">Ça m'intéresse</button>
+</div>
+
+<div class="button-feature" tabindex="0">
+  Mode veille intelligent
+  <div class="dropdown-info">
+    <p>Grâce à son mode veille automatique, la consommation énergétique du minuteur est optimisée pour une autonomie maximale.</p>
   </div>
-  <div class="button-feature" tabindex="0">
-    Mode veille intelligent
-    <div class="dropdown-info">
-      <p>Grâce à son mode veille automatique, la consommation énergétique du minuteur est optimisée pour une autonomie maximale.</p>
-    </div>
+  <button class="vote-feature" data-feature="Mode veille intelligent">Ça m'intéresse</button>
+</div>
   </div>
 </div>
 
@@ -373,6 +411,30 @@ document.getElementById('toggle-about').addEventListener('click', function(e) {
     about.style.display = 'none';
   }
 });
+// SYSTEME DE VOTE PAR FEATURE
+document.querySelectorAll('.vote-feature').forEach(button => {
+  button.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const featureName = button.getAttribute('data-feature');
+    try {
+      const response = await fetch('https://formspree.io/f/mpwdwpqe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feature: featureName })
+      });
+      if (response.ok) {
+        button.disabled = true;
+        button.textContent = "Merci pour votre intérêt !";
+      } else {
+        button.textContent = "Erreur, réessayez.";
+      }
+    } catch (error) {
+      console.error('Erreur de soumission:', error);
+      button.textContent = "Erreur, réessayez.";
+    }
+  });
+});
+
 </script>
 
 </body>
