@@ -1,367 +1,336 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "r9s0z2lxqf");
+</script>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minuteur Intelligent NFC</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: #F9F8F3;
+    --color-blob: #E5F5F2;
+    --color-front: #C0ECE5;
+    --color-side: #7CD4C0;
+    --color-primary: #156C5E;
+    --color-secondary: #2A8B7E;
+    --shadow: 0 4px 12px rgba(42, 139, 126, 0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  
+  html, body {
+    height: auto;
+    background: var(--color-bg);
+    font-family: 'Poppins', sans-serif;
+    color: var(--color-primary);
+    line-height: 1.4;
+    padding: 0 16px;
+    overflow-x: hidden;
+  }
 
-  <title>Minuteur Intelligent NFC</title>
+  #parallax-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    --scroll: 0;
+    --blur: 0px;
+    transform: translateY(calc(var(--scroll) * 1px));
+    transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .layer[data-speed="0.8"] { --blur: 0px; }
+  .layer[data-speed="0.5"] { --blur: 0.5px; }
+  .layer[data-speed="0.2"] { --blur: 1px; }
 
-  <!-- Clarity Analytics -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "r9s0z2lxqf");
-  </script>
+  .digit {
+    position: absolute;
+    font-family: 'DSEG7Classic', monospace;
+    font-size: calc(1rem + var(--size)*0.5rem);
+    white-space: nowrap;
+    transform: translate(-50%,-50%);
+    filter: drop-shadow(var(--shadow)) blur(var(--blur));
+  }
+  .layer[data-speed="0.8"] .digit { color: var(--color-blob); }
+  .layer[data-speed="0.5"] .digit { color: var(--color-front); }
+  .layer[data-speed="0.2"] .digit { color: var(--color-primary); }
 
-  <!-- Poppins Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  @font-face {
+    font-family: 'DSEG7Classic';
+    src: url('https://cdn.jsdelivr.net/npm/@fontsource/dseg7-classic/files/dseg7-classic-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
 
-  <style>
-    /* ================= Vos styles existants ================= */
-    :root {
-      --color-bg: #F9F8F3;
-      --color-blob: #E5F5F2;
-      --color-front: #C0ECE5;
-      --color-side: #7CD4C0;
-      --color-primary: #156C5E;
-      --color-secondary: #2A8B7E;
-      --shadow: 0 4px 12px rgba(42, 139, 126, 0.15);
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 200vh; overflow-x: hidden; background: var(--color-bg); }
-    body {
-      font-family: 'Poppins', sans-serif;
-      color: var(--color-primary);
-      line-height: 1.4;
-      padding: 0 16px;
-    }
-    .page {
-      position: relative;
-      z-index: 1;
-      max-width: 480px;
-      margin: 0 auto 4rem;
-      padding-top: 2rem;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    .page.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .button-feature {
-      position: relative;
-      display: block;
-      background-color: var(--color-secondary);
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      margin: 1rem 0;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      overflow: hidden;
-      z-index: 1;
-    }
-    .button-feature:hover,
-    .button-feature:focus-within {
-      background-color: var(--color-primary);
-    }
-    .dropdown-info {
-      max-height: 0;
-      overflow: hidden;
-      background-color: rgba(192, 236, 229, 0.9);
-      color: var(--color-primary);
-      padding: 0;
-      border-radius: 8px;
-      box-shadow: var(--shadow);
-      margin-top: 0.5rem;
-      transition: max-height 0.5s ease, padding 0.5s ease;
-    }
-    .button-feature:hover .dropdown-info,
-    .button-feature:focus-within .dropdown-info,
-    .button-feature.active .dropdown-info {
-      max-height: 200px;
-      padding: 0.8rem;
-    }
-    .learn-more {
-      display: block;
-      margin-top: 0.5rem;
-      text-decoration: none;
-      font-weight: 600;
-      opacity: 0;
-      transition: opacity 0.3s ease 0.2s;
-    }
-    .button-feature:hover .learn-more,
-    .button-feature.active .learn-more {
-      opacity: 1;
-    }
-    .button-cta {
-      display: block;
-      background-color: var(--color-secondary);
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      margin: 2rem 0;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      text-decoration: none;
-      position: relative;
-      z-index: 1;
-    }
-    .button-cta:hover {
-      background-color: var(--color-primary);
-    }
-    .image-mid {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      margin: 0 auto;
-      border-radius: 12px;
-      box-shadow: var(--shadow);
-      position: relative;
-      z-index: 1;
-    }
-    h2.swear {
-      font-size: 2rem;
-      text-align: center;
-      color: var(--color-secondary);
-      margin-top: 4rem;
-      position: relative;
-      z-index: 1;
-    }
+  .page {
+    position: relative;
+    max-width: 480px;
+    margin: 0 auto 4rem;
+    padding-top: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    z-index: 1;
+  }
+  .page.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-    /* ================ Parallax 7-Segments ================ */
-    @font-face {
-      font-family: 'DSEG7Classic';
-      src: url('https://cdn.jsdelivr.net/npm/@fontsource/dseg7-classic/files/dseg7-classic-latin-400-normal.woff2') format('woff2');
-      font-weight: 400; font-style: normal; font-display: swap;
-    }
-    #parallax-container {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100vh;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .layer {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      --scroll: 0; --blur: 0px;
-      transform: translateY(calc(var(--scroll) * 1px));
-      transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
-    }
-    .layer[data-speed="0.8"] { --blur: 0px; }
-    .layer[data-speed="0.5"] { --blur: 0.5px; }
-    .layer[data-speed="0.2"] { --blur: 1px; }
-    .digit {
-      position: absolute;
-      font-family: 'DSEG7Classic', monospace;
-      font-size: calc(1rem + var(--size) * 0.5rem);
-      white-space: nowrap;
-      transform: translate(-50%, -50%);
-      filter: drop-shadow(var(--shadow)) blur(var(--blur));
-    }
-    .layer[data-speed="0.8"] .digit { color: var(--color-blob); }
-    .layer[data-speed="0.5"] .digit { color: var(--color-front); }
-    .layer[data-speed="0.2"] .digit { color: var(--color-primary); }
-  </style>
+  .button-feature, .button-cta {
+    position: relative;
+    display: block;
+    background-color: var(--color-secondary);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin: 1rem 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    overflow: hidden;
+    text-decoration: none;
+    z-index: 1;
+  }
+  .button-feature:hover, .button-cta:hover {
+    background-color: var(--color-primary);
+  }
+  
+  .dropdown-info {
+    max-height: 0;
+    overflow: hidden;
+    background-color: rgba(192, 236, 229, 0.9);
+    color: var(--color-primary);
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-top: 0.5rem;
+    transition: max-height 0.5s ease, padding 0.5s ease;
+  }
+  .button-feature.pinned .dropdown-info {
+    max-height: 200px;
+    padding: 0.8rem;
+  }
+
+  .image-mid {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  h2.swear {
+    font-size: 2rem;
+    text-align: center;
+    color: var(--color-secondary);
+    margin-top: 4rem;
+  }
+
+  #modal-prototype {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-prototype .modal-content {
+    background: var(--color-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--shadow);
+    position: relative;
+    animation: fadeIn 0.4s ease;
+  }
+  #close-modal {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-secondary);
+    cursor: pointer;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
 </head>
 <body>
 
-  <!-- Parallax Background -->
-  <div id="parallax-container">
-    <div class="layer" data-speed="0.8"></div>
-    <div class="layer" data-speed="0.5"></div>
-    <div class="layer" data-speed="0.2"></div>
-  </div>
+<!-- PARALLAX BACKGROUND -->
+<div id="parallax-container">
+  <div class="layer" data-speed="0.8"></div>
+  <div class="layer" data-speed="0.5"></div>
+  <div class="layer" data-speed="0.2"></div>
+</div>
 
-  <!--===== Contenu du site =====-->
-  <div class="page">
-    <h1>Novlease smart timer</h1>
-    <p>Gestion avancée du temps avec simplicité et hygiène optimale grâce au sans-contact NFC.</p>
+<!-- CONTENU -->
+<div class="page">
+  <h1>Novlease smart timer</h1>
+  <p>Gestion avancée du temps avec simplicité et hygiène optimale grâce au sans-contact NFC.</p>
 
-    <div class="button-feature" tabindex="0">
-      Contrôle sans fil
-      <div class="dropdown-info">
-        <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct.</p>
-        <a class="learn-more" href="#wireless">En savoir plus →</a>
-      </div>
-    </div>
-    <div class="button-feature" tabindex="0">
-      Alarmes personnalisables
-      <div class="dropdown-info">
-        <p>Paramétrez des alarmes avec signaux sonores personnalisés selon vos protocoles.</p>
-        <a class="learn-more" href="#alarms">En savoir plus →</a>
-      </div>
-    </div>
-    <div class="button-feature" tabindex="0">
-      Hygiène renforcée
-      <div class="dropdown-info">
-        <p>Limitez les interactions manuelles, réduisant les risques de contaminations.</p>
-        <a class="learn-more" href="#hygiene">En savoir plus →</a>
-      </div>
-    </div>
-    <div class="button-feature" tabindex="0">
-      Multitâche avancé
-      <div class="dropdown-info">
-        <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages.</p>
-        <a class="learn-more" href="#multitasking">En savoir plus →</a>
-      </div>
-    </div>
-    <div class="button-feature" tabindex="0">
-      Absorption des chocs
-      <div class="dropdown-info">
-        <p>Protection en silicone assurant une résistance accrue aux chocs et chutes.</p>
-        <a class="learn-more" href="#shock">En savoir plus →</a>
-      </div>
-    </div>
-    <div class="button-feature" tabindex="0">
-      Mode veille intelligent
-      <div class="dropdown-info">
-        <p>Économie d'énergie avec mode veille automatique prolongeant l'autonomie.</p>
-        <a class="learn-more" href="#sleep">En savoir plus →</a>
-      </div>
+  <div class="button-feature" tabindex="0">
+    Contrôle sans fil
+    <div class="dropdown-info">
+      <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
     </div>
   </div>
-
-  <div class="page" id="wireless">
-    <h2>Contrôle sans fil</h2>
-    <p>Le minuteur utilise la technologie NFC (Near Field Communication) pour permettre une interaction sans contact. En approchant un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton. Cela évite les erreurs de programmation manuelle et assure un gain de temps considérable dans la gestion de plusieurs protocoles parallèles.</p>
+  <div class="button-feature" tabindex="0">
+    Alarmes personnalisables
+    <div class="dropdown-info">
+      <p>Paramétrez des alarmes avec signaux sonores personnalisés selon vos protocoles. Chaque tag peut mémoriser une séquence sonore personnalisée pour s’adapter à vos usages spécifiques.</p>
+    </div>
   </div>
-
-  <div class="page" id="alarms">
-    <h2>Alarmes personnalisables</h2>
-    <p>Chaque tag peut également mémoriser une séquence sonore choisie par l'utilisateur. Les alarmes configurables peuvent donc s’adapter à différents usages. La répétition et la forme des signaux sonores peuvent être ajustées pour être facilement associée à une étape de votre protocole.</p>
+  <div class="button-feature" tabindex="0">
+    Hygiène renforcée
+    <div class="dropdown-info">
+      <p>Limitez les interactions manuelles, réduisant les risques de contaminations. Le contrôle sans contact réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
+    </div>
   </div>
-
-  <div class="page" id="hygiene">
-    <h2>Hygiène renforcée</h2>
-    <p>Le contrôle sans contact par NFC réduit drastiquement la fréquence des interactions manuelles avec les boutons. Cela permet de limiter les risques de contamination croisée avec l'utilisateur et l'environnement, ce qui est crucial dans les environnements où l’asepsie est primordiale.</p>
+  <div class="button-feature" tabindex="0">
+    Multitâche avancé
+    <div class="dropdown-info">
+      <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
+    </div>
   </div>
-
-  <div class="page" id="multitasking">
-    <h2>Multitâche avancé</h2>
-    <p>Ce minuteur permet à l’utilisateur de déclencher plusieurs comptes à rebours en parallèle. Ainsi, plusieurs processus peuvent être suivis simultanément, chacun avec son propre timing.</p>
+  <div class="button-feature" tabindex="0">
+    Absorption des chocs
+    <div class="dropdown-info">
+      <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture de silicone.</p>
+    </div>
   </div>
-
-  <div class="page" id="shock">
-    <h2>Absorption des chocs</h2>
-    <p>Conçu pour résister aux rigueurs des environnements professionnels, le boîtier du minuteur est robuste et amortit les chocs dus à une manipulation fréquente ou à des chutes accidentelles. Cette résistance mécanique garantit une longévité accrue, même dans les laboratoires les plus dynamiques.</p>
+  <div class="button-feature" tabindex="0">
+    Mode veille intelligent
+    <div class="dropdown-info">
+      <p>Grâce à son mode veille automatique, la consommation énergétique du minuteur est optimisée pour une autonomie maximale.</p>
+    </div>
   </div>
+</div>
 
-  <div class="page" id="sleep">
-    <h2>Mode veille intelligent</h2>
-    <p>Afin d’optimiser la consommation énergétique, le minuteur entre automatiquement en mode veille après une période d’inactivité. Ce mode prolonge considérablement la durée de vie de la batterie ou de l’alimentation, tout en étant automatiquement réactivable lorsque le dispositif est pris en main.</p>
+<div class="page">
+  <h2>Intéressé par le développement de ce produit ?</h2>
+  <p>Soyez au courant dés que son développement sera terminé.</p>
+  <a href="#prototype" class="button-cta">Laisser son adresse mail</a>
+</div>
+
+<div id="modal-prototype">
+  <div class="modal-content">
+    <button id="close-modal">&times;</button>
+    <h2>Recevez votre prototype</h2>
+    <form action="https://formspree.io/f/xdkgkapw" method="POST">
+      <label style="display:block; margin-top:1rem;">
+        Votre email :
+        <input type="email" name="email" required style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:1px solid var(--color-front);">
+      </label>
+      <label style="display:block; margin-top:1rem;">
+        Message (optionnel) :
+        <textarea name="message" style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:1px solid var(--color-front);"></textarea>
+      </label>
+      <button type="submit" style="margin-top:1.5rem; width:100%; padding:1rem; border:none; border-radius:12px; background-color:var(--color-secondary); color:white; font-weight:bold; cursor:pointer; transition: background-color 0.3s;">
+        Envoyer
+      </button>
+    </form>
   </div>
+</div>
 
-  <div class="page footer-cta">
-    <h2>Intéressé par une démonstration ?</h2>
-    <p>Recevez gratuitement un prototype de notre minuteur intelligent NFC pour test.</p>
-    <a href="#prototype" class="button-cta">Demandez un prototype</a>
-  </div>
-
-  <!-- ================= Vos scripts existants ================= -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const pages = document.querySelectorAll('.page');
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-      }, { threshold: 0.1 });
-      pages.forEach(page => observer.observe(page));
-
-      document.querySelectorAll('.button-feature').forEach(el => {
-        el.addEventListener('click', function() {
-          if (this.classList.contains('active')) {
-            const link = this.querySelector('.learn-more');
-            if (link) window.location.href = link.getAttribute('href');
-          } else {
-            this.classList.add('active');
-          }
-        });
+<!-- SCRIPTS -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const pages = document.querySelectorAll('.page');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
       });
-      document.addEventListener('click', evt => {
-        document.querySelectorAll('.button-feature.active').forEach(el => {
-          if (!el.contains(evt.target)) el.classList.remove('active');
-        });
-      });
+    }, { threshold: 0.1 });
+    pages.forEach(page => observer.observe(page));
 
-      const anchors = document.querySelectorAll('.page[id]');
-      anchors.forEach(sec => sec.style.display = 'none');
-      function showSection(hash) {
-        const id = hash.slice(1);
-        const target = document.getElementById(id);
-        if (target) {
-          anchors.forEach(sec => sec.style.display = 'none');
-          target.style.display = 'block';
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-      if (window.location.hash) showSection(window.location.hash);
-      window.addEventListener('hashchange', () => showSection(window.location.hash));
+    const features = document.querySelectorAll('.button-feature');
+    features.forEach(feature => {
+      feature.addEventListener('click', (e) => {
+        e.preventDefault();
+        feature.classList.toggle('pinned');
+      });
     });
-  </script>
 
-  <!-- =========== Script Parallax 7-Segments Amélioré =========== -->
-  <script>
-    (function(){
-      const layers = document.querySelectorAll('.layer');
-      const count  = 40;
-      let ticking  = false;
+    const modal = document.getElementById('modal-prototype');
+    const openModalBtn = document.querySelector('.button-cta');
+    const closeModalBtn = document.getElementById('close-modal');
 
-      const heat = () => (Math.sin((Math.random() - 0.5) * Math.PI) + 1) / 2;
+    openModalBtn?.addEventListener('click', e => {
+      e.preventDefault();
+      modal.style.display = 'flex';
+    });
+    closeModalBtn?.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', e => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+  });
 
-      layers.forEach(layer => {
-        const placed = [];
-        for (let i = 0; i < count; i++) {
-          let x, y, tries = 0, tooClose;
-          do {
-            x = heat() * 100;
-            y = heat() * 200 - 50;
-            tooClose = placed.some(p =>
-              Math.hypot(p.x - x, p.y - y) < 5
-            );
-            tries++;
-          } while (tooClose && tries < 10);
+  // PARALLAX SCRIPT
+  (function(){
+    const layers = document.querySelectorAll('.layer');
+    const count = 40;
+    let ticking = false;
+    const heat = () => (Math.sin((Math.random() - 0.5) * Math.PI) + 1) / 2;
 
-          const span = document.createElement('span');
-          span.className = 'digit';
-          const mm = String(Math.floor(Math.random() * 60)).padStart(2,'0');
-          const ss = String(Math.floor(Math.random() * 60)).padStart(2,'0');
-          span.textContent = `${mm}:${ss}`;
-          span.style.left = `${x}%`;
-          span.style.top  = `${y}%`;
-          span.style.setProperty('--size', Math.random());
-          layer.appendChild(span);
+    layers.forEach(layer => {
+      for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.className = 'digit';
+        const mm = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+        const ss = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+        span.textContent = `${mm}:${ss}`;
+        const x = heat() * 100;
+        const y = heat() * 200 - 50;
+        span.style.left = `${x}%`;
+        span.style.top = `${y}%`;
+        span.style.setProperty('--size', Math.random());
+        layer.appendChild(span);
+      }
+    });
 
-          if (!tooClose) placed.push({ x, y });
-        }
-      });
-
-      window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        if (!ticking) {
-          window.requestAnimationFrame(() => {
-            layers.forEach(layer => {
-              const speed = parseFloat(layer.dataset.speed);
-              layer.style.setProperty('--scroll', -scrollY * speed);
-            });
-            ticking = false;
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          layers.forEach(layer => {
+            const speed = parseFloat(layer.dataset.speed);
+            layer.style.setProperty('--scroll', -scrollY * speed);
           });
-          ticking = true;
-        }
-      }, { passive: true });
-    })();
-  </script>
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+</script>
 
 </body>
 </html>
