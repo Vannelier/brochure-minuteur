@@ -13,7 +13,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Novlease Smart Timer</title>
 
-<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="images/favicon_io/favicon.ico" type="image/x-icon">
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -244,6 +244,29 @@
   <a href="#prototype" class="button-cta">Laisser son adresse mail</a>
 </div>
 
+<div class="page">
+  <a href="#" id="toggle-about" style="display:block; text-align:center; margin:2rem 0; color:var(--color-secondary); text-decoration:underline; font-weight:600; cursor:pointer;">
+    En savoir plus sur le créateur et le projet
+  </a>
+  <div id="about-content" style="display:none; background-color: var(--color-blob); padding:1.5rem; border-radius:12px; box-shadow: var(--shadow); margin-bottom:4rem;">
+    <h3 style="color: var(--color-primary); margin-bottom:1rem; text-align:center;">À propos</h3>
+    <p style="margin-bottom:0.5rem;">
+Je m'appelle Nathan, créateur du projet Novlease.
+Durant mon parcours professionnel en laboratoire, j'ai constaté une source d'erreur insoupçonnée : les minuteurs.
+C'est en partant de cette observation que j'ai lancé ce projet il y a plus d'un an.
+
+Tout retour ou toute suggestion est la bienvenue : n'hésitez pas à me contacter à l'adresse novlease.contact@gmail.com.
+
+J'espère pouvoir compter sur vos retours pour peaufiner un produit qui répondra aux vrais besoins du terrain.
+Merci pour votre temps et votre soutien à ce projet indépendant !
+
+    </p>
+    <p>
+      Chaque fonction a été pensée à partir d'observations réelles et optimisée pour répondre aux vrais besoins du terrain. Merci de soutenir ce projet indépendant !
+    </p>
+  </div>
+</div>
+
 <div id="modal-prototype">
   <div class="modal-content">
     <button id="close-modal">&times;</button>
@@ -275,13 +298,18 @@
     }, { threshold: 0.1 });
     pages.forEach(page => observer.observe(page));
 
-    const features = document.querySelectorAll('.button-feature');
-    features.forEach(feature => {
-      feature.addEventListener('click', (e) => {
-        e.preventDefault();
-        feature.classList.toggle('pinned');
-      });
-    });
+const features = document.querySelectorAll('.button-feature');
+features.forEach(feature => {
+  feature.addEventListener('click', (e) => {
+    e.preventDefault();
+    feature.classList.toggle('pinned');
+    
+    if (typeof clarity === 'function') {
+      clarity('set', 'feature_clicked', feature.textContent.trim());
+    }
+  });
+});
+
 
     const modal = document.getElementById('modal-prototype');
     const openModalBtn = document.querySelector('.button-cta');
@@ -334,6 +362,17 @@
       }
     }, { passive: true });
   })();
+
+document.getElementById('toggle-about').addEventListener('click', function(e) {
+  e.preventDefault();
+  const about = document.getElementById('about-content');
+  if (about.style.display === 'none' || about.style.display === '') {
+    about.style.display = 'block';
+    about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    about.style.display = 'none';
+  }
+});
 </script>
 
 </body>
