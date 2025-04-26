@@ -507,7 +507,18 @@ features.forEach(feature => {
         const mm = String(Math.floor(Math.random() * 60)).padStart(2, '0');
         const ss = String(Math.floor(Math.random() * 60)).padStart(2, '0');
         span.textContent = `${mm}:${ss}`;
-        const x = heat() * 100;
+        let x;
+if (layer.dataset.speed === "0.2") {
+  // Couches plus sombres : chiffres seulement sur les côtés
+  if (Math.random() < 0.5) {
+    x = Math.random() * 20; // 0% à 20% à gauche
+  } else {
+    x = 80 + Math.random() * 20; // 80% à 100% à droite
+  }
+} else {
+  // Couches claires : chiffres partout
+  x = heat() * 100;
+}
         const y = heat() * 200 - 50;
         span.style.left = `${x}%`;
         span.style.top = `${y}%`;
