@@ -92,7 +92,7 @@
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    z-index: 1;
+    z-index: 2;
   }
   .page.visible {
     opacity: 1;
@@ -222,11 +222,15 @@
   align-items: center;
   text-align: center;
   padding: 2rem 1rem;
-  background: var(--color-blob);
+background: rgba(229, 245, 242, 0.7); /* Couleur de var(--color-blob) avec transparence */
+backdrop-filter: blur(2px); /* Ajoute un léger flou derrière */
+-webkit-backdrop-filter: blur(2px); /* pour Safari */
   border-radius: 20px;
   box-shadow: var(--shadow);
   margin-top: 2rem;
   margin-bottom: 4rem;
+  position: relative;
+  z-index: 2;
 }
 
 .hero h1 {
@@ -323,54 +327,69 @@
 </div>
 </div>
 
-<div class="page">  <div class="button-feature" tabindex="0">
-  Contrôle sans fil
-<span class="toggle-icon">+</span>
-  <div class="dropdown-info">
-    <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
+<div class="page">
+  
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Contrôle sans fil</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
+    </div>
   </div>
-</div>
 
-<div class="button-feature" tabindex="0">
-  Alarmes personnalisables
-<span class="toggle-icon">+</span>
-  <div class="dropdown-info">
-    <p>Paramétrez des alarmes avec signaux sonores personnalisés selon vos protocoles. Chaque tag peut mémoriser une séquence sonore personnalisée pour s’adapter à vos usages spécifiques.</p>
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Alarmes personnalisables</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Paramétrez des alarmes avec signaux sonores personnalisés selon vos protocoles. Chaque tag peut mémoriser une séquence sonore personnalisée pour s’adapter à vos usages spécifiques.</p>
+    </div>
   </div>
-</div>
 
-<div class="button-feature" tabindex="0">
-  Hygiène renforcée
-<span class="toggle-icon">+</span>
-  <div class="dropdown-info">
-    <p>Limitez les interactions manuelles, réduisant les risques de contaminations. Le contrôle sans contact réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Hygiène renforcée</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Limitez les interactions manuelles, réduisant les risques de contaminations. Le contrôle sans contact réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
+    </div>
   </div>
-</div>
 
-<div class="button-feature" tabindex="0">
-  Multitâche avancé
-<span class="toggle-icon">+</span>
-  <div class="dropdown-info">
-    <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Multitâche avancé</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
+    </div>
   </div>
-</div>
 
-<div class="button-feature" tabindex="0">
-  Absorption des chocs
-<span class="toggle-icon">+</span>
-  <div class="dropdown-info">
-    <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture de silicone.</p>
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Absorption des chocs</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture de silicone.</p>
+    </div>
   </div>
-</div>
 
-<div class="button-feature" tabindex="0">
-  Mode veille intelligent
-<span class="toggle-icon">+</span>
-  <div class="dropdown-info">
-    <p>Grâce à son mode veille automatique, la consommation énergétique du minuteur est optimisée pour une autonomie maximale.</p>
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Mode veille intelligent</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Grâce à son mode veille automatique, la consommation énergétique du minuteur est optimisée pour une autonomie maximale.</p>
+    </div>
   </div>
+
 </div>
-  </div>
 </div>
 
 <div class="page">
@@ -540,64 +559,102 @@ document.querySelectorAll('.vote-feature').forEach(button => {
 
 let featuresOpened = false; // état initial
 
+
+function smoothScrollTo(targetY, duration = 800) {
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  let startTime = null;
+
+  function animation(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // Easing quartique très doux
+    const easeOutQuart = (x) => {
+      return 1 - Math.pow(1 - x, 4);
+    };
+
+    const easedProgress = easeOutQuart(progress);
+
+    window.scrollTo(0, startY + distance * easedProgress);
+
+    if (elapsed < duration) {
+      requestAnimationFrame(animation);
+    }
+  }
+
+  requestAnimationFrame(animation);
+}
+
 document.getElementById('show-features').addEventListener('click', () => {
   const features = document.querySelectorAll('.button-feature');
 
   if (!featuresOpened) {
-    // Ouvre toutes les bulles et ajoute les boutons
-    features.forEach(feature => {
-      feature.classList.add('pinned');
+    const firstFeature = document.querySelector('.button-feature');
+    if (firstFeature) {
+      const rect = firstFeature.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - 100; // ➔ plus haut que juste au bord
+      smoothScrollTo(targetY, 1000);
 
-      if (!feature.querySelector('.vote-feature')) {
-        const button = document.createElement('button');
-        button.className = 'vote-feature';
-        button.textContent = "Ça m'intéresse";
-        button.setAttribute('data-feature', feature.childNodes[0].textContent.trim());
+      setTimeout(() => {
+        features.forEach(feature => {
+          feature.classList.add('pinned');
 
-        feature.appendChild(button);
+          if (!feature.querySelector('.vote-feature')) {
+            const button = document.createElement('button');
+            button.className = 'vote-feature';
+            button.textContent = "Ça m'intéresse";
+            button.setAttribute('data-feature', feature.querySelector('.feature-title').textContent.trim());
 
-        button.addEventListener('click', async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const featureName = button.getAttribute('data-feature');
-          try {
-            const response = await fetch('https://formspree.io/f/mpwdwpqe', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-              },
-              body: JSON.stringify({ feature: featureName })
+            feature.appendChild(button);
+
+            button.addEventListener('click', async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const featureName = button.getAttribute('data-feature');
+              try {
+                const response = await fetch('https://formspree.io/f/mpwdwpqe', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                  },
+                  body: JSON.stringify({ feature: featureName })
+                });
+                if (response.ok) {
+                  button.disabled = true;
+                  button.textContent = "Merci pour votre intérêt !";
+                } else {
+                  button.textContent = "Erreur, réessayez.";
+                }
+              } catch (error) {
+                console.error('Erreur de soumission:', error);
+                button.textContent = "Erreur.";
+              }
             });
-            if (response.ok) {
-              button.disabled = true;
-              button.textContent = "Merci pour votre intérêt !";
-            } else {
-              button.textContent = "Erreur, réessayez.";
-            }
-          } catch (error) {
-            console.error('Erreur de soumission:', error);
-            button.textContent = "Erreur.";
           }
         });
-      }
-    });
-    featuresOpened = true;
-    document.getElementById('show-features').textContent = "Masquer le sondage";
+
+        featuresOpened = true;
+        document.getElementById('show-features').textContent = "Masquer le sondage";
+      }, 1000);
+    }
+
   } else {
-    // Ferme toutes les bulles et supprime les boutons
     features.forEach(feature => {
       feature.classList.remove('pinned');
-
       const voteButton = feature.querySelector('.vote-feature');
       if (voteButton) {
         voteButton.remove();
       }
     });
+
     featuresOpened = false;
     document.getElementById('show-features').textContent = "Donnez votre avis";
   }
 });
+
 
 
 
