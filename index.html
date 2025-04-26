@@ -315,6 +315,17 @@ backdrop-filter: blur(2px); /* Ajoute un léger flou derrière */
   }
 }
 
+@keyframes popFade {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.hero img {
+  animation: popFade 1s ease forwards;
+  opacity: 0;
+}
+
+
 </style>
 </head>
 <body>
@@ -330,21 +341,22 @@ backdrop-filter: blur(2px); /* Ajoute un léger flou derrière */
 <div class="hero">
   <h1>Novlease Smart Timer</h1>
   <p>Gestion avancée du temps, simplicité et hygiène sans contact NFC.</p>
-<div class="scroll-down">
-  <span>Faites défiler</span>
-  <div class="arrow"></div>
-</div>
+  <img src="images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
+  <div class="scroll-down">
+    <span>Faites défiler</span>
+    <div class="arrow"></div>
+  </div>
 </div>
 
 <div class="page">
   
   <div class="button-feature" tabindex="0">
     <div class="feature-header">
-      <span class="feature-title">Contrôle sans fil</span>
+      <span class="feature-title">Fonction NFC</span>
       <span class="toggle-icon">+</span>
     </div>
     <div class="dropdown-info">
-      <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
+      <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant le minuteur d'un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
     </div>
   </div>
 
@@ -370,11 +382,11 @@ backdrop-filter: blur(2px); /* Ajoute un léger flou derrière */
 
   <div class="button-feature" tabindex="0">
     <div class="feature-header">
-      <span class="feature-title">Multitâche avancé</span>
+      <span class="feature-title">Multicanal avancé</span>
       <span class="toggle-icon">+</span>
     </div>
     <div class="dropdown-info">
-      <p>Gérez simultanément plusieurs comptes à rebours ou chronométrages. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
+      <p>Gérez simultanément plusieurs comptes à rebours. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
     </div>
   </div>
 
@@ -402,7 +414,7 @@ backdrop-filter: blur(2px); /* Ajoute un léger flou derrière */
 </div>
 
 <div class="page">
-  <h2>Intéressé par le développement de ce produit ?</h2>
+  <h2>Aidez nous à développer ce projet</h2>
   <div style="text-align:center; margin:2rem 0;">
     <button id="show-features" style="padding:1rem 2rem; background-color:var(--color-front); border:none; border-radius:12px; color:var(--color-primary); font-size:1.1rem; box-shadow:var(--shadow); cursor:pointer;">
       Donnez votre avis
@@ -419,14 +431,20 @@ backdrop-filter: blur(2px); /* Ajoute un léger flou derrière */
   <div id="about-content" style="display:none; background-color: var(--color-blob); padding:1.5rem; border-radius:12px; box-shadow: var(--shadow); margin-bottom:4rem;">
     <h3 style="color: var(--color-primary); margin-bottom:1rem; text-align:center;">À propos</h3>
     <p style="margin-bottom:0.5rem;">
-Je m'appelle Nathan, créateur du projet Novlease.
-Durant mon parcours professionnel en laboratoire, j'ai constaté une source d'erreur insoupçonnée : les minuteurs.
-C'est en partant de cette observation que j'ai lancé ce projet il y a plus d'un an.
+Je m'appelle Nathan Venter.
+Professionnel de santé en laboratoire médical, je travaille depuis plusieurs années en sérologie.
+Au fil de mon expérience en laboratoire, j'ai constaté à quel point un élément simple – le minuteur – pouvait être source d'erreurs, de pertes de temps, et de risques d'hygiène.
 
-Tout retour ou toute suggestion est la bienvenue : n'hésitez pas à me contacter à l'adresse novlease.contact@gmail.com.
+Face aux limites des minuteurs existants et après de nombreuses recherches infructueuses pour trouver une solution adaptée, j'ai décidé de créer Novlease.
+Ce projet est né d'une volonté concrète : concevoir un outil plus intelligent, plus pratique et plus sûr pour les environnements exigeants.
 
-J'espère pouvoir compter sur vos retours pour peaufiner un produit qui répondra aux vrais besoins du terrain.
-Merci pour votre temps et votre soutien à ce projet indépendant !
+Depuis plus d'un an, je me forme en électronique et en développement logiciel en autodidacte pour donner vie à cette idée.
+Aujourd'hui, je propose un minuteur intelligent NFC, pensé pour réduire les manipulations, simplifier la gestion du temps et s'adapter aux vrais besoins du terrain.
+
+Chaque fonction du produit a été imaginée à partir d'observations de terrain et affinée grâce aux retours des utilisateurs.
+Mon objectif : proposer une solution innovante, accessible et fiable, pour améliorer l'efficacité et la sécurité du quotidien en laboratoire – et au-delà.
+
+N'hésitez pas à me contacter si le coeur vous en dit !
 
     </p>
     <p>
@@ -438,7 +456,7 @@ Merci pour votre temps et votre soutien à ce projet indépendant !
 <div id="modal-prototype">
   <div class="modal-content">
     <button id="close-modal">&times;</button>
-    <h2>Recevez votre prototype</h2>
+    <h2>Restez au courant</h2>
     <form action="https://formspree.io/f/xovdvejr" method="POST">
       <label style="display:block; margin-top:1rem;">
         Votre email :
@@ -475,6 +493,8 @@ features.forEach(feature => {
     if (typeof clarity === 'function') {
       clarity('set', 'feature_clicked', feature.textContent.trim());
     }
+document.querySelector('.hero img').style.opacity = 1;
+
   });
 });
 
