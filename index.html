@@ -125,6 +125,7 @@
     background-color: rgba(192, 236, 229, 0.9);
     color: var(--color-primary);
     padding: 0;
+
     border-radius: 8px;
     box-shadow: var(--shadow);
     margin-top: 0.5rem;
@@ -235,9 +236,16 @@
 
 .hero h1 {
   font-size: 2.8rem;
+  font-weight: 800;
   color: var(--color-secondary);
   margin-bottom: 1rem;
+  text-align: center;
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  animation: fadeInUp 1s ease forwards;
 }
+
 
 .hero p {
   font-size: 1.2rem;
@@ -331,6 +339,105 @@
   }
 }
 
+/* --- AMÉLIORATIONS GÉNÉRALES --- */
+h1, h2, h3 {
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* --- DÉCORATION DE SECTION "Fonctionnalités en développement" --- */
+.page > h2:first-of-type {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.page > h2:first-of-type::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--color-front);
+  margin: 1rem auto 2rem;
+  border-radius: 2px;
+}
+
+/* --- FLÈCHE "Faites défiler" PLUS DOUCE --- */
+.scroll-down {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.scroll-down .arrow {
+  width: 30px;
+  height: 30px;
+  border-left: 3px solid var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+  transform: rotate(-45deg);
+  margin: 0 auto;
+  margin-top: 0.5rem;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+/* --- TRANSITION TEXTES AU SCROLL --- */
+.page {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.page.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.button-cta, 
+#show-features {
+  display: block;
+  background-color: var(--color-secondary);
+  color: white;
+  text-align: center;
+  padding: 1rem 2rem;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s, transform 0.3s;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem auto;
+  text-decoration: none;
+}
+
+.button-cta:hover, 
+#show-features:hover {
+  background-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+
+/* --- HARMONISATION DES BOUTONS --- */
+.button-cta, .button-feature {
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+
 </style>
 </head>
 <body>
@@ -344,24 +451,33 @@
 
 <!-- CONTENU -->
 <div class="hero">
-  <h1>Novlease Smart Timer</h1>
-  <p>Gestion avancée du temps, simplicité et hygiène sans contact NFC.</p>
-<img src="assets/images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
+<h1>Un nouveau minuteur pour environnements exigeants</h1>
+<p>Découvrez Novlease Smart Timer, un minuteur NFC sans contact pour environnements sensibles.<br>
+</p>
+  <img src="assets/images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
   <div class="scroll-down">
-    <span>Faites défiler</span>
+    <span>Faites défiler pour en savoir plus</span>
     <div class="arrow"></div>
   </div>
 </div>
 
 <div class="page">
+
+<h2 style="text-align: center; font-size: 1.5rem; color: var(--color-primary); margin-bottom: 2rem;">
+Fonctionnalités en développement
+</h2>
+<p style="text-align: center; color: var(--color-secondary); font-size: 1rem; margin-bottom: 3rem;">
+Découvrez les principales fonctionnalités prévues pour Novlease Smart Timer.<br>
+</p>
+
   
   <div class="button-feature" tabindex="0">
     <div class="feature-header">
-      <span class="feature-title">Fonction NFC</span>
+      <span class="feature-title">Activation sans contact</span>
       <span class="toggle-icon">+</span>
     </div>
     <div class="dropdown-info">
-      <p>Gérez facilement les réglages grâce à la technologie NFC sans contact direct. En approchant le minuteur d'un tag NFC programmé, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton.</p>
+      <p>Lancez facilement vos comptes à rebours grâce à la technologie NFC. En approchant le minuteur d'un autocollant NFC programmé à l'avance, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton. L'autocollant sert à la fois d'aide mémoire et d'outil d'activation du compte à rebours</p>
     </div>
   </div>
 
@@ -371,17 +487,17 @@
       <span class="toggle-icon">+</span>
     </div>
     <div class="dropdown-info">
-      <p>Paramétrez des alarmes avec signaux sonores personnalisés selon vos protocoles. Chaque tag peut mémoriser une séquence sonore personnalisée pour s’adapter à vos usages spécifiques.</p>
+      <p>Paramétrez des alarmes personnalisées selon vos protocoles. Chaque autocollant peut mémoriser une séquence sonore personnalisée permettant ainsi d'associer une étape de votre protocole à un signal sonore spécifique.</p>
     </div>
   </div>
 
   <div class="button-feature" tabindex="0">
     <div class="feature-header">
-      <span class="feature-title">Hygiène renforcée</span>
+      <span class="feature-title">Hygiène assurée</span>
       <span class="toggle-icon">+</span>
     </div>
     <div class="dropdown-info">
-      <p>Limitez les interactions manuelles, réduisant les risques de contaminations. Le contrôle sans contact réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
+      <p>Le contrôle sans contact du minuteur réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
     </div>
   </div>
 
@@ -397,11 +513,21 @@
 
   <div class="button-feature" tabindex="0">
     <div class="feature-header">
+      <span class="feature-title">Rechargeable</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Débarassez-vous des piles boutons et rechargez votre minuteur via son port USB-C.</p>
+    </div>
+  </div>
+
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
       <span class="feature-title">Absorption des chocs</span>
       <span class="toggle-icon">+</span>
     </div>
     <div class="dropdown-info">
-      <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture de silicone.</p>
+      <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture en silicone.</p>
     </div>
   </div>
 
@@ -419,14 +545,14 @@
 </div>
 
 <div class="page">
-  <h2>Aidez nous à développer ce projet</h2>
+  <h2>Donnez votre avis et aidez-nous à créer l'outil parfait !</h2>
   <div style="text-align:center; margin:2rem 0;">
     <button id="show-features" style="padding:1rem 2rem; background-color:var(--color-front); border:none; border-radius:12px; color:var(--color-primary); font-size:1.1rem; box-shadow:var(--shadow); cursor:pointer;">
       Donnez votre avis
     </button>
   </div>
-  <p>Soyez au courant dés que son développement sera terminé.</p>
-  <a href="#prototype" class="button-cta">Laisser son adresse mail</a>
+  <p>Si vous souhaitez voir une fonctionnalité en plus.</p>
+  <a href="#prototype" class="button-cta">Laissez-moi un message</a>
 </div>
 
 <div class="page">
@@ -446,10 +572,9 @@ Ce projet est né d'une volonté concrète : concevoir un outil plus intelligent
 Depuis plus d'un an, je me forme en électronique et en développement logiciel en autodidacte pour donner vie à cette idée.
 Aujourd'hui, je propose un minuteur intelligent NFC, pensé pour réduire les manipulations, simplifier la gestion du temps et s'adapter aux vrais besoins du terrain.
 
-Chaque fonction du produit a été imaginée à partir d'observations de terrain et affinée grâce aux retours des utilisateurs.
 Mon objectif : proposer une solution innovante, accessible et fiable, pour améliorer l'efficacité et la sécurité du quotidien en laboratoire – et au-delà.
 
-N'hésitez pas à me contacter si le coeur vous en dit !
+N'hésitez pas à me contacter si le cœur vous en dit !
 
     </p>
     <p>
@@ -461,14 +586,14 @@ N'hésitez pas à me contacter si le coeur vous en dit !
 <div id="modal-prototype">
   <div class="modal-content">
     <button id="close-modal">&times;</button>
-    <h2>Restez au courant</h2>
+
     <form action="https://formspree.io/f/xovdvejr" method="POST">
       <label style="display:block; margin-top:1rem;">
         Votre email :
         <input type="email" name="email" required style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:1px solid var(--color-front);">
       </label>
       <label style="display:block; margin-top:1rem;">
-        Message (optionnel) :
+        Message :
         <textarea name="message" style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:1px solid var(--color-front);"></textarea>
       </label>
       <button type="submit" style="margin-top:1.5rem; width:100%; padding:1rem; border:none; border-radius:12px; background-color:var(--color-secondary); color:white; font-weight:bold; cursor:pointer; transition: background-color 0.3s;">
@@ -645,7 +770,7 @@ document.getElementById('show-features').addEventListener('click', () => {
     const firstFeature = document.querySelector('.button-feature');
     if (firstFeature) {
       const rect = firstFeature.getBoundingClientRect();
-      const targetY = window.scrollY + rect.top - 100; // ➔ plus haut que juste au bord
+      const targetY = window.scrollY + rect.top - 180; // ➔ plus haut que juste au bord
       smoothScrollTo(targetY, 1000);
 
       setTimeout(() => {
@@ -707,6 +832,17 @@ document.getElementById('show-features').addEventListener('click', () => {
 });
 
 
+// SCROLL DOWN en cliquant sur "Faites défiler"
+document.querySelector('.scroll-down').addEventListener('click', function(e) {
+  e.preventDefault();
+  const pages = document.querySelectorAll('.page');
+  if (pages.length > 0) {
+    const firstPage = pages[0];
+    const rect = firstPage.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top - 80; // Décale un peu vers le haut pour que ce soit propre
+    smoothScrollTo(targetY, 1000);
+  }
+});
 
 
 
