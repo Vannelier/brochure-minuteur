@@ -793,7 +793,7 @@ document.getElementById('show-features').addEventListener('click', () => {
           if (!feature.querySelector('.vote-feature')) {
             const button = document.createElement('button');
             button.className = 'vote-feature';
-            button.textContent = "Ça m'intéresse";
+            button.textContent = "Voter";
             button.setAttribute('data-feature', feature.querySelector('.feature-title').textContent.trim());
 
             feature.appendChild(button);
