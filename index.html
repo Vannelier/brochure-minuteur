@@ -8,6 +8,47 @@
     t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   })(window, document, "clarity", "script", "r9s0z2lxqf");
+
+features.forEach(feature => {
+  feature.addEventListener('click', e => {
+    e.preventDefault();
+    const drop = feature.querySelector('.dropdown-info');
+
+    // on ajoute d’abord le bouton vote (si absent)
+    if (!drop.querySelector('.vote-feature')){
+      const b = document.createElement('button');
+      b.className = 'vote-feature';
+      b.textContent = '👍 Je vote pour cette fonctionnalité';
+      b.dataset.feature = feature.querySelector('.feature-title').textContent.trim();
+      drop.appendChild(b);           // ➜ inclut le bouton AVANT de mesurer
+    }
+
+    // toggle
+    if (feature.classList.contains('pinned')){
+      // fermeture
+      drop.style.maxHeight = drop.scrollHeight + 'px'; // déclenche reflow
+      requestAnimationFrame(()=>{                       // puis anime → 0
+        drop.style.maxHeight = '0px';
+        feature.classList.remove('pinned');
+      });
+    }else{
+      // ouverture
+      feature.classList.add('pinned');
+      const full = drop.scrollHeight;         // hauteur naturelle
+      drop.style.maxHeight = '0px';           // point de départ
+      requestAnimationFrame(()=>{             // frame suivante
+        drop.style.maxHeight = full + 'px';   // anime → pleine hauteur
+      });
+    }
+  });
+});
+css
+Copier
+Modifier
+
+
+
+
 </script>
 
 <meta charset="UTF-8">
@@ -189,32 +230,42 @@
     to { opacity: 1; transform: scale(1); }
   }
 .vote-feature {
-  display: none;
-  margin-top: 0.5rem;
-  padding: 0.6rem 1rem;
-  font-size: 0.9rem;
-  background-color: var(--color-front);
-  color: var(--color-primary);
+  display: block;
+  width: 100%;
+  margin-top: .8rem;
+  padding: .9rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--color-primary);
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: var(--shadow);
   cursor: pointer;
-  transition: background-color 0.3s;
-  width: 100%;
+  transition: transform .2s, background-color .3s;
+  animation: pulse-soft 2.2s ease-in-out infinite;
 }
-.button-feature.pinned .vote-feature {
-  display: block;
-}
-.vote-feature:hover {
+
+/* --- Hover (facultatif, inchangé) ---------------------------------- */
+.vote-feature:hover:not(:disabled){
+  transform: translateY(-2px);
   background-color: var(--color-secondary);
-  color: white;
 }
-.vote-feature:disabled {
-  background-color: var(--color-blob);
+
+/* --- Bouton désactivé  ➜  on stoppe l’animation -------------------- */
+.vote-feature:disabled{
+  animation: none;           /* <— coupe le pulse   */
+  transform: scale(1);       /* s’assure qu’il revient à 1   */
+  background: var(--color-blob);
   color: var(--color-primary);
   cursor: default;
   font-weight: 600;
   position: relative;
+}
+.vote-feature:disabled::before{
+  content: "✔️";
+  position: absolute;
+  left: 1rem;
 }
 
 .hero {
@@ -325,6 +376,19 @@
   }
 }
 
+@media (max-width: 767px) {
+  .hero {
+    min-height: 60vh;   /* ou 50 vh, à tester */
+    margin-top: 0;      /* retire l’espace superflu */
+  }
+}
+
+@keyframes pulse-soft {
+  0%   { transform: scale(1);   box-shadow: var(--shadow); }
+ 50%   { transform: scale(1.03); box-shadow: 0 5px 14px rgba(42,139,126,.22); }
+ 100%  { transform: scale(1);   box-shadow: var(--shadow); }
+}
+
 @keyframes popFade {
   0% { opacity: 0; transform: scale(0.8); }
   100% { opacity: 1; transform: scale(1); }
@@ -340,14 +404,6 @@
     max-width: 700px;
   }
 }
-
-  @media (max-width: 767px) {
-  .hero {
-    min-height: 60vh;   /* ou 50 vh, à tester */
-    margin-top: 0;      /* retire l’espace superflu */
-  }
-}
-
 
 /* --- AMÉLIORATIONS GÉNÉRALES --- */
 h1, h2, h3 {
@@ -447,10 +503,17 @@ p {
   font-weight: 600;
 }
 
-  @media (max-width: 767px) {
+@media (max-width: 767px) {
   .hero h1 {
     font-size: 2rem;
   }
+}
+
+
+.dropdown-info{
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .45s ease;
 }
 
 </style>
@@ -469,7 +532,7 @@ p {
 <h1>Un nouveau minuteur pour environnements exigeants</h1>
 <p>Découvrez Novlease Smart Timer, un minuteur NFC sans contact pour environnements sensibles.<br>
 </p>
-  <img src="assets/images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
+<img src="assets/images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
   <div class="scroll-down">
     <span>Faites défiler pour en savoir plus</span>
     <div class="arrow"></div>
@@ -560,7 +623,7 @@ Découvrez les principales fonctionnalités prévues pour Novlease Smart Timer.<
 </div>
 
 <div class="page">
-    <h2>Votez pour la ou les features que vous aimez et aidez-nous à créer l'outil parfait !</h2>
+  <h2>Votez pour la ou les features que vous aimez et aidez-nous à créer l'outil parfait !</h2>
   <div style="text-align:center; margin:2rem 0;">
     <button id="show-features" style="padding:1rem 2rem; background-color:var(--color-front); border:none; border-radius:12px; color:var(--color-primary); font-size:1.1rem; box-shadow:var(--shadow); cursor:pointer;">
       Donnez votre avis
@@ -620,6 +683,100 @@ N'hésitez pas à me contacter si le cœur vous en dit !
 
 <!-- SCRIPTS -->
 <script>
+
+(function () {
+
+  /* ---------- 1.  Helpers ---------------------------------------------- */
+  const STORAGE_KEY = 'novleaseVotes';
+
+  /* 1.a  → slug sans accent, en minuscules (ex. « Activation sans contact » → activation-sans-contact) */
+  const slugify = str =>
+      str.toLowerCase()
+         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // enlève accents
+         .replace(/[^a-z0-9]+/g, '-')                       // remplace tout le reste par «-»
+         .replace(/(^-|-$)/g, '');
+
+  const voteStore = {
+    _read()  { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } },
+    _write(l){ localStorage.setItem(STORAGE_KEY, JSON.stringify(l)); },
+    has(s)   { return this._read().includes(s); },
+    add(s)   { const l = this._read(); if (!l.includes(s)){ l.push(s); this._write(l);} }
+  };
+
+  /* ---------- 2.  Applique l’état “déjà voté” --------------------------- */
+  function hydrate(btn) {
+    const slug = btn.dataset.slug;
+    if (voteStore.has(slug)) {
+      btn.disabled    = true;
+      btn.textContent = 'Merci pour votre intérêt !';
+    }
+  }
+
+  /* ---------- 3.  Fabrique (ou récupère) un bouton pour une feature ----- */
+  function ensureButton(featureEl) {
+    let btn = featureEl.querySelector('.vote-feature');
+    const title = featureEl.querySelector('.feature-title').textContent.trim();
+    const slug  = slugify(title);
+
+    if (!btn) {                                            /* création si absent */
+      btn = document.createElement('button');
+      btn.className      = 'vote-feature';
+      btn.dataset.slug   = slug;                           /* <— clé fiable */
+      btn.dataset.title  = title;
+      btn.textContent    = '👍 Je vote pour cette fonctionnalité';
+      featureEl.appendChild(btn);
+
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        try {
+          const r = await fetch('https://formspree.io/f/mpwdwpqe', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({ feature: title })
+          });
+          if (r.ok) { voteStore.add(slug); hydrate(btn); }
+          else      { btn.textContent = 'Erreur, réessayez.'; }
+        } catch(err) { console.error(err); btn.textContent = 'Erreur.'; }
+      });
+    }
+
+    hydrate(btn);                                         /* <— toujours */
+  }
+
+  /* ---------- 4.  Initialisation globale ------------------------------- */
+  document.addEventListener('DOMContentLoaded', () => {
+
+    /* 4.a  Boutons déjà dans le HTML (si vous en avez laissés) */
+    document.querySelectorAll('.vote-feature')
+            .forEach(hydrate);                             // slug vient déjà du data-attr
+
+    /* 4.b  Logique “Donnez votre avis” */
+    const toggle = document.getElementById('show-features');
+    if (!toggle) return;
+
+    let open = false;
+
+    toggle.addEventListener('click', () => {
+      const features = document.querySelectorAll('.button-feature');
+
+      if (!open) {                                        /* --- OUVERTURE --- */
+        features.forEach(f => {
+          f.classList.add('pinned');
+          ensureButton(f);
+        });
+        open = true;
+        toggle.textContent = 'Masquer le sondage';
+
+      } else {                                            /* --- FERMETURE --- */
+        features.forEach(f => f.classList.remove('pinned'));
+        /* on ne supprime plus les boutons → l’état reste en place */
+        open = false;
+        toggle.textContent = 'Donnez votre avis';
+      }
+    });
+  });
+
+})();
   document.addEventListener('DOMContentLoaded', () => {
     const pages = document.querySelectorAll('.page');
     const observer = new IntersectionObserver(entries => {
@@ -858,7 +1015,6 @@ document.querySelector('.scroll-down').addEventListener('click', function(e) {
     smoothScrollTo(targetY, 1000);
   }
 });
-
 
 
 </script>
