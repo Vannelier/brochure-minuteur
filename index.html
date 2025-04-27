@@ -9,43 +9,6 @@
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   })(window, document, "clarity", "script", "r9s0z2lxqf");
 
-features.forEach(feature => {
-  feature.addEventListener('click', e => {
-    e.preventDefault();
-    const drop = feature.querySelector('.dropdown-info');
-
-    // on ajoute d’abord le bouton vote (si absent)
-    if (!drop.querySelector('.vote-feature')){
-      const b = document.createElement('button');
-      b.className = 'vote-feature';
-      b.textContent = '👍 Je vote pour cette fonctionnalité';
-      b.dataset.feature = feature.querySelector('.feature-title').textContent.trim();
-      drop.appendChild(b);           // ➜ inclut le bouton AVANT de mesurer
-    }
-
-    // toggle
-    if (feature.classList.contains('pinned')){
-      // fermeture
-      drop.style.maxHeight = drop.scrollHeight + 'px'; // déclenche reflow
-      requestAnimationFrame(()=>{                       // puis anime → 0
-        drop.style.maxHeight = '0px';
-        feature.classList.remove('pinned');
-      });
-    }else{
-      // ouverture
-      feature.classList.add('pinned');
-      const full = drop.scrollHeight;         // hauteur naturelle
-      drop.style.maxHeight = '0px';           // point de départ
-      requestAnimationFrame(()=>{             // frame suivante
-        drop.style.maxHeight = full + 'px';   // anime → pleine hauteur
-      });
-    }
-  });
-});
-css
-Copier
-Modifier
-
 
 
 
@@ -53,6 +16,7 @@ Modifier
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>Novlease Smart Timer</title>
 
 <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -67,8 +31,47 @@ Modifier
     --color-primary: #156C5E;
     --color-secondary: #2A8B7E;
     --shadow: 0 4px 12px rgba(42, 139, 126, 0.15);
+    --c-number: #0F766E22;   
   }
   * { margin:0; padding:0; box-sizing:border-box; }
+
+
+@media (prefers-color-scheme: dark){
+  :root{
+--color-bg:#0D1117;
+--color-blob:#18344A;
+--color-front:#1E3A4B;
+--color-side:#2A4D5C;
+--color-primary:#25A392;
+--color-secondary:#19847A;
+--shadow:0 4px 12px rgba(0,0,0,.60);
+--c-number:#2A8B7E33;
+  }
+}
+
+
+:root[data-theme="dark"]{
+--color-bg:#0D1117; 
+--color-blob:#18344A; 
+--color-front:#1E3A4B;
+--color-side:#2A4D5C; 
+--color-primary:#25A392; 
+--color-secondary:#19847A;
+--shadow:0 4px 12px rgba(0,0,0,.60); 
+--c-number:#FFFFFF1A;
+}
+
+:root[data-theme="light"]{
+  --color-bg:#F9F8F3;
+  --color-blob:#E5F5F2;
+  --color-front:#C0ECE5;
+  --color-side:#7CD4C0;
+  --color-primary:#156C5E;
+  --color-secondary:#2A8B7E;
+  --shadow:0 4px 12px rgba(42,139,126,.15);
+  --c-number:#2A8B7E33;
+}
+
   
   html, body {
     height: auto;
@@ -90,7 +93,19 @@ Modifier
   }
 .digit {
   z-index: -1;
+  color: var(--c-number);
 }
+
+@media (prefers-color-scheme: dark){
+  .hero img{            /* ↓ 85 % de luminosité, léger contraste          */
+    filter:brightness(.85) contrast(1.05);
+  }
+}
+
+:root[data-theme="dark"] .hero img{
+  filter:brightness(.85) contrast(1.05);
+}
+
   .layer {
     position: absolute;
     top: 0; left: 0;
@@ -113,9 +128,6 @@ Modifier
     transform: translate(-50%,-50%);
     filter: drop-shadow(var(--shadow)) blur(var(--blur));
   }
-  .layer[data-speed="0.8"] .digit { color: var(--color-blob); }
-  .layer[data-speed="0.5"] .digit { color: var(--color-front); }
-  .layer[data-speed="0.2"] .digit { color: var(--color-primary); }
 
   @font-face {
     font-family: 'DSEG7Classic';
@@ -163,7 +175,7 @@ Modifier
   .dropdown-info {
     max-height: 0;
     overflow: hidden;
-    background-color: rgba(192, 236, 229, 0.9);
+    background-color: var(--color-front);
     color: var(--color-primary);
     padding: 0;
 
@@ -199,7 +211,7 @@ Modifier
     top: 0; left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+  background: var(--color-bg);
     backdrop-filter: blur(2px);
     z-index: 1000;
     align-items: center;
@@ -532,7 +544,7 @@ p {
 <h1>Un nouveau minuteur pour environnements exigeants</h1>
 <p>Découvrez Novlease Smart Timer, un minuteur NFC sans contact pour environnements sensibles.<br>
 </p>
-<img src="assets/images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
+  <img src="assets/images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
   <div class="scroll-down">
     <span>Faites défiler pour en savoir plus</span>
     <div class="arrow"></div>
@@ -681,8 +693,33 @@ N'hésitez pas à me contacter si le cœur vous en dit !
   </div>
 </div>
 
+<button id="theme-toggle" aria-label="Basculer le thème"
+        style="position:fixed;bottom:1rem;right:1rem;
+               width:44px;height:44px;border:none;border-radius:50%;
+               background:var(--color-secondary);color:#fff;font-size:1.2rem;
+               box-shadow:var(--shadow);cursor:pointer;z-index:999;">🌓</button>
+
 <!-- SCRIPTS -->
 <script>
+
+  (()=>{
+    const root   = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const store  = localStorage;
+
+    /* 1)  à l’arrivée, on applique la sauvegarde éventuelle */
+    const saved = store.getItem('novlease-theme');
+    if(saved) root.setAttribute('data-theme', saved);
+
+    /* 2)  clic = inversion + mémorisation */
+    toggle.addEventListener('click', ()=>{
+      const cur   = root.getAttribute('data-theme');
+      const next  = (cur==='dark') ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      store.setItem('novlease-theme', next);
+    });
+  })();
+
 
 (function () {
 
@@ -759,15 +796,15 @@ N'hésitez pas à me contacter si le cœur vous en dit !
     toggle.addEventListener('click', () => {
       const features = document.querySelectorAll('.button-feature');
 
-      if (!open) {                                        /* --- OUVERTURE --- */
+      if (!open) {
         features.forEach(f => {
-          f.classList.add('pinned');
+    f.classList.remove('pinned');
           ensureButton(f);
         });
         open = true;
         toggle.textContent = 'Masquer le sondage';
 
-      } else {                                            /* --- FERMETURE --- */
+      } else {
         features.forEach(f => f.classList.remove('pinned'));
         /* on ne supprime plus les boutons → l’état reste en place */
         open = false;
@@ -947,7 +984,7 @@ document.getElementById('show-features').addEventListener('click', () => {
 
       setTimeout(() => {
         features.forEach(feature => {
-          feature.classList.add('pinned');
+  feature.classList.remove('pinned');
 
           if (!feature.querySelector('.vote-feature')) {
             const button = document.createElement('button');
