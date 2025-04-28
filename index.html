@@ -152,15 +152,17 @@
     background-color: var(--color-front);
     color: var(--color-primary);
     padding: 0;
-
+    overflow: hidden;
+    transition: max-height 0.5s ease, padding 0.5s ease;
     border-radius: 8px;
     box-shadow: var(--shadow);
     margin-top: 0.5rem;
     transition: max-height 0.5s ease, padding 0.5s ease;
   }
   .button-feature.pinned .dropdown-info {
-    max-height: 200px;
+    max-height: 600px;
     padding: 0.8rem;
+    transition: max-height 0.5s ease, padding 0.5s ease;
   }
 
   .image-mid {
