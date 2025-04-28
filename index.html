@@ -503,9 +503,47 @@ p {
   transition: max-height .45s ease;
 }
 
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--color-bg);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(42, 139, 126, 0.1);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: 100;
+}
+
+.site-header.hide {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center; /* bonus pour garantir l'alignement du texte */
+}
+
+.logo span {
+  font-weight: 400;
+  color: var(--color-secondary);
+}
+
+
 </style>
 </head>
 <body>
+
+<header class="site-header">
+  <div class="logo">Novlease <span>Smart Timer</span></div>
+</header>
+
 
 <!-- PARALLAX BACKGROUND -->
 <div id="parallax-container">
@@ -1003,6 +1041,23 @@ document.querySelector('.scroll-down').addEventListener('click', function(e) {
     const targetY = window.scrollY + rect.top - 80; // Décale un peu vers le haut pour que ce soit propre
     smoothScrollTo(targetY, 1000);
   }
+});
+
+let lastScrollTop = 0;
+const header = document.querySelector('.site-header');
+
+window.addEventListener('scroll', function() {
+  let scrollTop = window.scrollY || document.documentElement.scrollTop;
+  
+  if (scrollTop > lastScrollTop && scrollTop > 100) {
+    // Scroll vers le bas
+    header.classList.add('hide');
+  } else {
+    // Scroll vers le haut
+    header.classList.remove('hide');
+  }
+  
+  lastScrollTop = scrollTop;
 });
 
 
