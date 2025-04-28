@@ -74,7 +74,7 @@
   color: var(--c-number);
 }
 
-a (prefers-color-scheme: dark){
+@media (prefers-color-scheme: dark){
   .hero img{            /* ↓ 85 % de luminosité, léger contraste          */
     filter:brightness(.85) contrast(1.05);
   }
