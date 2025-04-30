@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window, document, "clarity", "script", "r9s0z2lxqf");
+</script>
+
+<meta charset="UTF-8">
+<meta name="description" content="Novlease Smart Timer, minuteur NFC sans contact pensé pour les environnements sensibles. Activation par sticker, multi-canal, rechargeable.">
+<meta property="og:title" content="Novlease Smart Timer">
+<meta property="og:description" content="Un minuteur NFC sans contact…">
+<meta property="og:image" content="https://votre-site/images/og-timer.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novlease Smart Timer</title>
+
+<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --color-bg: #F9F8F3;
+    --color-blob: #E5F5F2;
+    --color-front: #C0ECE5;
+    --color-side: #7CD4C0;
+    --color-primary: #156C5E;
+    --color-secondary: #2A8B7E;
+    --shadow: 0 4px 12px rgba(42, 139, 126, 0.15);
+    --c-number: #0F766E22;   
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+
+@media (prefers-color-scheme: dark){
+  :root{
+--color-bg:#0D1117;
+--color-blob:#18344A;
+--color-front:#1E3A4B;
+--color-side:#2A4D5C;
+--color-primary:#25A392;
+--color-secondary:#19847A;
+--shadow:0 4px 12px rgba(0,0,0,.60);
+--c-number:#2A8B7E33;
+  }
+}
+
+
+  
+  html, body {
+    height: auto;
+    background: var(--color-bg);
+    font-family: 'Poppins', sans-serif;
+    color: var(--color-primary);
+    line-height: 1.4;
+    padding: 0 16px;
+    overflow-x: hidden;
+  }
+
+  #parallax-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+  }
+.digit {
+  z-index: -1;
+  color: var(--c-number);
+}
+
+@media (prefers-color-scheme: dark){
+  .hero img{            /* ↓ 85 % de luminosité, léger contraste          */
+    filter:brightness(.85) contrast(1.05);
+  }
+}
+
+  .layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    --scroll: 0;
+    --blur: 0px;
+    transform: translateY(calc(var(--scroll) * 1px));
+    transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .layer[data-speed="0.8"] { --blur: 0px; }
+  .layer[data-speed="0.5"] { --blur: 0.5px; }
+  .layer[data-speed="0.2"] { --blur: 1px; }
+
+  .digit {
+    position: absolute;
+    font-family: 'DSEG7Classic', monospace;
+    font-size: calc(1rem + var(--size)*0.5rem);
+    white-space: nowrap;
+    transform: translate(-50%,-50%);
+    filter: drop-shadow(var(--shadow)) blur(var(--blur));
+  }
+
+  @font-face {
+    font-family: 'DSEG7Classic';
+    src: url('https://cdn.jsdelivr.net/npm/@fontsource/dseg7-classic/files/dseg7-classic-latin-400-normal.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  .page {
+    position: relative;
+    max-width: 480px;
+    margin: 0 auto 4rem;
+    padding-top: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    z-index: 2;
+  }
+  .page.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .button-feature, .button-cta {
+    position: relative;
+    display: block;
+    background-color: var(--color-secondary);
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin: 1rem 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    overflow: hidden;
+    text-decoration: none;
+    z-index: 1;
+  }
+  .button-feature:hover, .button-cta:hover {
+    background-color: var(--color-primary);
+  }
+  
+  .dropdown-info {
+    max-height: 0;
+    overflow: hidden;
+    will-change: max-height;
+    background-color: var(--color-front);
+    color: var(--color-primary);
+    padding: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, padding 0.5s ease;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-top: 0.5rem;
+    transition: max-height 0.5s ease, padding 0.5s ease;
+  }
+  .button-feature.pinned .dropdown-info {
+    max-height: 600px;
+    padding: 0.8rem;
+    transition: max-height 0.5s ease, padding 0.5s ease;
+    overflow: visible;
+  }
+
+  .image-mid {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+  }
+
+  h2.swear {
+    font-size: 2rem;
+    text-align: center;
+    color: var(--color-secondary);
+    margin-top: 4rem;
+  }
+
+  #modal-prototype {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+  background: var(--color-bg);
+    backdrop-filter: blur(2px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal-prototype .modal-content {
+    background: var(--color-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--shadow);
+    position: relative;
+    animation: fadeIn 0.4s ease;
+  }
+  #close-modal {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-secondary);
+    cursor: pointer;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+.vote-feature {
+  display: block;
+  width: 100%;
+  margin-top: .8rem;
+  padding: .9rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform .2s, background-color .3s;
+  animation: pulse-soft 2.2s ease-in-out infinite;
+}
+
+/* --- Hover (facultatif, inchangé) ---------------------------------- */
+.vote-feature:hover:not(:disabled){
+  transform: translateY(-2px);
+  background-color: var(--color-secondary);
+}
+
+/* --- Bouton désactivé  ➜  on stoppe l’animation -------------------- */
+.vote-feature:disabled{
+  animation: none;           /* <— coupe le pulse   */
+  transform: scale(1);       /* s’assure qu’il revient à 1   */
+  background: var(--color-blob);
+  color: var(--color-primary);
+  cursor: default;
+  font-weight: 600;
+  position: relative;
+}
+.vote-feature:disabled::before{
+  content: "✔️";
+  position: absolute;
+  left: 1rem;
+}
+
+.hero {
+  min-height: 80vh;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  padding-top: 5rem;
+  max-width: 480px;
+  width: 100%;
+  margin: 2rem auto 4rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
+  font-weight: 800;
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+  text-align: center;
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  animation: fadeInUp 1s ease forwards;
+}
+
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 500px;
+  color: var(--color-primary);
+}
+.scroll-down {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.scroll-down .arrow {
+  margin: 0 auto;
+  margin-top: 0.5rem;
+  width: 24px;
+  height: 24px;
+  border-left: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  transform: rotate(-45deg);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) rotate(-45deg);
+  }
+  40% {
+    transform: translateY(6px) rotate(-45deg);
+  }
+  60% {
+    transform: translateY(4px) rotate(-45deg);
+  }
+}
+
+.feature-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feature-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  flex: 1;
+}
+
+.toggle-icon {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+  color: white;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.button-feature:hover .toggle-icon {
+  color: var(--color-blob); /* Change la couleur au survol */
+}
+
+.button-feature.pinned .toggle-icon {
+  transform: rotate(45deg); /* Tourne quand c’est ouvert */
+}
+
+@media (min-width: 768px) {
+  .page {
+    max-width: 700px;
+  }
+  .hero {
+    max-width: 700px;
+    padding-top: 5rem; /* ➔ tu peux regrouper ici */
+  }
+}
+  .hero {
+    padding-top: 5rem; /* Au lieu de 6rem */
+  }
+}
+  
+  .button-feature {
+    width: 100%; /* ➔ Prend toute la largeur disponible */
+  }
+}
+
+@keyframes pulse-soft {
+  0%   { transform: scale(1);   box-shadow: var(--shadow); }
+ 50%   { transform: scale(1.03); box-shadow: 0 5px 14px rgba(42,139,126,.22); }
+ 100%  { transform: scale(1);   box-shadow: var(--shadow); }
+}
+
+@keyframes popFade {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.hero img {
+  animation: popFade 1s ease forwards;
+  opacity: 0;
+}
+@media (max-width: 768px) {
+  .site-header {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .hero {
+    min-height: 60vh;
+    padding-top: 3rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    max-width: 90%;
+  }
+
+  .hero img {
+    max-width: 180px;
+    margin-top: 1rem;
+  }
+
+  .scroll-down {
+    margin-top: 2.5rem; /* <-- Ici, on la remonte */
+    font-size: 0.8rem; /* texte plus petit */
+  }
+
+  .scroll-down .arrow {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Bonus : réduire la taille du footer sur mobile */
+  footer {
+    font-size: 0.8rem;
+  }
+}
+
+/* --- AMÉLIORATIONS GÉNÉRALES --- */
+h1, h2, h3 {
+  font-weight: 700;
+  color: var(--color-secondary);
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* --- DÉCORATION DE SECTION "Fonctionnalités en développement" --- */
+.page > h2:first-of-type {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.page > h2:first-of-type::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--color-front);
+  margin: 1rem auto 2rem;
+  border-radius: 2px;
+}
+
+/* --- FLÈCHE "Faites défiler" PLUS DOUCE --- */
+.scroll-down {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-primary);
+}
+
+.scroll-down .arrow {
+  width: 30px;
+  height: 30px;
+  border-left: 3px solid var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+  transform: rotate(-45deg);
+  margin: 0 auto;
+  margin-top: 0.5rem;
+  animation: bounce 2s infinite ease-in-out;
+}
+
+/* --- TRANSITION TEXTES AU SCROLL --- */
+.page {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.page.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.button-cta, 
+#show-features {
+  display: block;
+  background-color: var(--color-secondary);
+  color: white;
+  text-align: center;
+  padding: 1rem 2rem;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s, transform 0.3s;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem auto;
+  text-decoration: none;
+}
+
+.button-cta:hover, 
+#show-features:hover {
+  background-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+
+/* --- HARMONISATION DES BOUTONS --- */
+.button-cta, .button-feature {
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+
+.dropdown-info{
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .45s ease;
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--color-bg);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(42, 139, 126, 0.1);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  z-index: 100;
+}
+
+.site-header.hide {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-align: center; /* bonus pour garantir l'alignement du texte */
+}
+
+.logo span {
+  font-weight: 400;
+  color: var(--color-secondary);
+}
+
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">Novlease <span>Smart Timer</span></div>
+</header>
+
+
+<!-- PARALLAX BACKGROUND -->
+<div id="parallax-container">
+  <div class="layer" data-speed="0.8"></div>
+  <div class="layer" data-speed="0.5"></div>
+  <div class="layer" data-speed="0.2"></div>
+</div>
+
+<!-- CONTENU -->
+<div class="hero">
+<h1>Simplifiez vos protocoles en un geste.</h1>
+<p>Découvrez <span style="font-weight:700;">Novlease</span> Smart Timer, le minuteur intelligent conçu pour les professionnels</p>
+</p>
+<img src="assets/images/tagalpha.png" alt="Illustration lecture NFC" style="max-width:250px; margin-top:1rem; border-radius:12px;">
+  <div class="scroll-down">
+    <span>Faites défiler pour en savoir plus</span>
+    <div class="arrow"></div>
+  </div>
+</div>
+
+<div class="page">
+
+<h2 style="text-align: center; font-size: 1.5rem; color: var(--color-primary); margin-bottom: 2rem;">
+Fonctionnalités en développement
+</h2>
+<p style="text-align: center; color: var(--color-secondary); font-size: 1rem; margin-bottom: 3rem;">
+Découvrez les principales fonctionnalités prévues pour Novlease Smart Timer.<br>
+</p>
+
+  
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Activation sans contact</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Lancez facilement vos comptes à rebours grâce à la technologie NFC. En approchant le minuteur d'un autocollant NFC programmé à l'avance, l'utilisateur peut démarrer un compte à rebours d'une durée prédéfinie sans appuyer sur un seul bouton. L'autocollant sert à la fois d'aide mémoire et d'outil d'activation du compte à rebours.</p>
+    </div>
+  </div>
+
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Alarmes personnalisables</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Paramétrez des alarmes personnalisées selon vos protocoles. Chaque autocollant peut mémoriser une séquence sonore personnalisée permettant ainsi d'associer une étape de votre protocole à un signal sonore spécifique.</p>
+    </div>
+  </div>
+
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Hygiène assurée</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Le contrôle sans contact du minuteur réduit drastiquement les interactions manuelles, limitant les risques de contamination croisée.</p>
+    </div>
+  </div>
+
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Multicanal avancé</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Gérez simultanément plusieurs comptes à rebours. Ce minuteur vous permet de suivre plusieurs comptes à rebours en parallèle avec un maximum de simplicité.</p>
+    </div>
+  </div>
+
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Rechargeable</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Débarassez-vous des piles boutons et rechargez votre minuteur via son port USB-C.</p>
+    </div>
+  </div>
+
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Absorption des chocs</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Conçu pour les environnements exigeants, le produit absorbe efficacement les chocs et chutes accidentelles grâce à sa ceinture en silicone.</p>
+    </div>
+  </div>
+
+  <div class="button-feature" tabindex="0">
+    <div class="feature-header">
+      <span class="feature-title">Mode veille intelligent</span>
+      <span class="toggle-icon">+</span>
+    </div>
+    <div class="dropdown-info">
+      <p>Grâce à son mode veille automatique, la consommation énergétique du minuteur est optimisée pour une autonomie maximale.</p>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="page">
+  <h2>Votez pour les features que vous aimez et aidez-nous à créer l'outil parfait !</h2>
+  <div style="text-align:center; margin:2rem 0;">
+    <button id="show-features" style="padding:1rem 2rem; background-color:var(--color-front); border:none; border-radius:12px; color:var(--color-primary); font-size:1.1rem; box-shadow:var(--shadow); cursor:pointer;">
+      Donnez votre avis
+    </button>
+  </div>
+<p style="text-align: center;">Une idée ? Faites-la nous connaître.</p>
+  <a href="#prototype" class="button-cta">Laissez-nous un message</a>
+</div>
+
+<div class="page">
+  <a href="#" id="toggle-about" style="display:block; text-align:center; margin:2rem 0; color:var(--color-secondary); text-decoration:underline; font-weight:600; cursor:pointer;">
+    En savoir plus sur le créateur et le projet
+  </a>
+  <div id="about-content" style="display:none; background-color: var(--color-blob); padding:1.5rem; border-radius:12px; box-shadow: var(--shadow); margin-bottom:4rem;">
+    <h3 style="color: var(--color-primary); margin-bottom:1rem; text-align:center;">À propos</h3>
+    <p style="margin-bottom:0.5rem;">
+Je m'appelle Nathan, jeune Liégeois de 28 ans.
+Professionnel de santé en laboratoire médical, je travaille depuis plusieurs années en sérologie.
+Au fil de mon expérience en laboratoire, j'ai constaté à quel point un élément simple – le minuteur – pouvait être source d'erreurs, de pertes de temps, et de risques d'hygiène.
+
+Face aux limites des minuteurs existants et après de nombreuses recherches infructueuses pour trouver une solution adaptée, j'ai décidé de créer Novlease.
+Ce projet est né d'une volonté concrète : concevoir un outil plus intelligent, plus pratique et plus sûr pour les environnements exigeants.
+
+Depuis plus d'un an, je me forme en électronique et en développement logiciel en autodidacte pour donner vie à cette idée.
+Aujourd'hui, je propose un minuteur intelligent NFC, pensé pour réduire les manipulations, simplifier la gestion du temps et s'adapter aux vrais besoins du terrain.
+
+Mon objectif : proposer une solution innovante, accessible et fiable, pour améliorer l'efficacité et la sécurité du quotidien en laboratoire – et au-delà.
+
+N'hésitez pas à me contacter si le cœur vous en dit !
+
+    </p>
+    <p>
+      Chaque fonction a été pensée à partir d'observations réelles et optimisée pour répondre aux vrais besoins du terrain. Merci de soutenir ce projet indépendant !
+    </p>
+  </div>
+</div>
+
+<div id="modal-prototype">
+  <div class="modal-content">
+    <button id="close-modal">&times;</button>
+
+    <form action="https://formspree.io/f/xovdvejr" method="POST">
+      <label style="display:block; margin-top:1rem;">
+        Votre email :
+        <input type="email" name="email" required style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:1px solid var(--color-front);">
+      </label>
+      <label style="display:block; margin-top:1rem;">
+        Message :
+        <textarea name="message" style="width:100%; padding:0.5rem; margin-top:0.5rem; border-radius:8px; border:1px solid var(--color-front);"></textarea>
+      </label>
+      <button type="submit" style="margin-top:1.5rem; width:100%; padding:1rem; border:none; border-radius:12px; background-color:var(--color-secondary); color:white; font-weight:bold; cursor:pointer; transition: background-color 0.3s;">
+        Envoyer
+      </button>
+    </form>
+  </div>
+</div>
+
+
+<!-- SCRIPTS -->
+<script>
+
+
+(function () {
+
+  /* ---------- 1.  Helpers ---------------------------------------------- */
+  const STORAGE_KEY = 'novleaseVotes';
+
+  /* 1.a  → slug sans accent, en minuscules (ex. « Activation sans contact » → activation-sans-contact) */
+  const slugify = str =>
+      str.toLowerCase()
+         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // enlève accents
+         .replace(/[^a-z0-9]+/g, '-')                       // remplace tout le reste par «-»
+         .replace(/(^-|-$)/g, '');
+
+  const voteStore = {
+    _read()  { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } },
+    _write(l){ localStorage.setItem(STORAGE_KEY, JSON.stringify(l)); },
+    has(s)   { return this._read().includes(s); },
+    add(s)   { const l = this._read(); if (!l.includes(s)){ l.push(s); this._write(l);} }
+  };
+
+  /* ---------- 2.  Applique l’état “déjà voté” --------------------------- */
+  function hydrate(btn) {
+    const slug = btn.dataset.slug;
+    if (voteStore.has(slug)) {
+      btn.disabled    = true;
+      btn.textContent = 'Merci pour votre intérêt !';
+    }
+  }
+
+  /* ---------- 3.  Fabrique (ou récupère) un bouton pour une feature ----- */
+  function ensureButton(featureEl) {
+    let btn = featureEl.querySelector('.vote-feature');
+    const title = featureEl.querySelector('.feature-title').textContent.trim();
+    const slug  = slugify(title);
+
+    if (!btn) {                                            /* création si absent */
+      btn = document.createElement('button');
+      btn.className      = 'vote-feature';
+      btn.dataset.slug   = slug;                           /* <— clé fiable */
+      btn.dataset.title  = title;
+      btn.textContent    = '👍 Je vote pour cette fonctionnalité';
+      featureEl.appendChild(btn);
+
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        try {
+          const r = await fetch('https://formspree.io/f/mpwdwpqe', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({ feature: title })
+          });
+          if (r.ok) { voteStore.add(slug); hydrate(btn); }
+          else      { btn.textContent = 'Erreur, réessayez.'; }
+        } catch(err) { console.error(err); btn.textContent = 'Erreur.'; }
+      });
+    }
+
+    hydrate(btn);                                         /* <— toujours */
+  }
+
+  /* ---------- 4.  Initialisation globale ------------------------------- */
+  document.addEventListener('DOMContentLoaded', () => {
+
+    /* 4.a  Boutons déjà dans le HTML (si vous en avez laissés) */
+    document.querySelectorAll('.vote-feature')
+            .forEach(hydrate);                             // slug vient déjà du data-attr
+
+    /* 4.b  Logique “Donnez votre avis” */
+    const toggle = document.getElementById('show-features');
+    if (!toggle) return;
+
+    let open = false;
+
+    toggle.addEventListener('click', () => {
+      const features = document.querySelectorAll('.button-feature');
+
+      if (!open) {
+        features.forEach(f => {
+    f.classList.remove('pinned');
+          ensureButton(f);
+        });
+        open = true;
+        toggle.textContent = 'Masquer le sondage';
+
+      } else {
+        features.forEach(f => f.classList.remove('pinned'));
+        /* on ne supprime plus les boutons → l’état reste en place */
+        open = false;
+        toggle.textContent = 'Donnez votre avis';
+      }
+    });
+  });
+
+})();
+  document.addEventListener('DOMContentLoaded', () => {
+    const pages = document.querySelectorAll('.page');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1 });
+    pages.forEach(page => observer.observe(page));
+
+const features = document.querySelectorAll('.button-feature');
+features.forEach(feature => {
+  feature.addEventListener('click', (e) => {
+    e.preventDefault();
+    feature.classList.toggle('pinned');
+    
+    if (typeof clarity === 'function') {
+      clarity('set', 'feature_clicked', feature.textContent.trim());
+    }
+document.querySelector('.hero img').style.opacity = 1;
+
+  });
+});
+
+
+    const modal = document.getElementById('modal-prototype');
+    const openModalBtn = document.querySelector('.button-cta');
+    const closeModalBtn = document.getElementById('close-modal');
+
+    openModalBtn?.addEventListener('click', e => {
+      e.preventDefault();
+      modal.style.display = 'flex';
+    });
+    closeModalBtn?.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', e => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+  });
+
+  // PARALLAX SCRIPT
+  (function(){
+    const layers = document.querySelectorAll('.layer');
+    let count;
+if (window.innerWidth > 768) {
+  count = 40;
+} else {
+  count = 10;
+}
+
+    let ticking = false;
+    const heat = () => (Math.sin((Math.random() - 0.5) * Math.PI) + 1) / 2;
+
+    layers.forEach(layer => {
+      for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.className = 'digit';
+        const mm = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+        const ss = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+        span.textContent = `${mm}:${ss}`;
+        let x;
+if (layer.dataset.speed === "0.2") {
+  // Couches plus sombres : chiffres seulement sur les côtés
+  if (Math.random() < 0.5) {
+    x = Math.random() * 20; // 0% à 20% à gauche
+  } else {
+    x = 80 + Math.random() * 20; // 80% à 100% à droite
+  }
+} else {
+  // Couches claires : chiffres partout
+  x = heat() * 100;
+}
+        const y = heat() * 200 - 50;
+        span.style.left = `${x}%`;
+        span.style.top = `${y}%`;
+        span.style.setProperty('--size', Math.random());
+        layer.appendChild(span);
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          layers.forEach(layer => {
+            const speed = parseFloat(layer.dataset.speed);
+            layer.style.setProperty('--scroll', -scrollY * speed);
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  })();
+
+document.getElementById('toggle-about').addEventListener('click', function(e) {
+  e.preventDefault();
+  const about = document.getElementById('about-content');
+  if (about.style.display === 'none' || about.style.display === '') {
+    about.style.display = 'block';
+    about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    about.style.display = 'none';
+  }
+});
+// SYSTEME DE VOTE PAR FEATURE
+document.querySelectorAll('.vote-feature').forEach(button => {
+  button.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const featureName = button.getAttribute('data-feature');
+    try {
+      const response = await fetch('https://formspree.io/f/mpwdwpqe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feature: featureName })
+      });
+      if (response.ok) {
+        button.disabled = true;
+        button.textContent = "Merci pour votre intérêt !";
+      } else {
+        button.textContent = "Erreur, réessayez.";
+      }
+    } catch (error) {
+      console.error('Erreur de soumission:', error);
+      button.textContent = "Erreur, réessayez.";
+    }
+  });
+});
+
+let featuresOpened = false; // état initial
+
+
+function smoothScrollTo(targetY, duration = 800) {
+  const startY = window.scrollY;
+  const distance = targetY - startY;
+  let startTime = null;
+
+  function animation(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+
+    // Easing quartique très doux
+    const easeOutQuart = (x) => {
+      return 1 - Math.pow(1 - x, 4);
+    };
+
+    const easedProgress = easeOutQuart(progress);
+
+    window.scrollTo(0, startY + distance * easedProgress);
+
+    if (elapsed < duration) {
+      requestAnimationFrame(animation);
+    }
+  }
+
+  requestAnimationFrame(animation);
+}
+
+document.getElementById('show-features').addEventListener('click', () => {
+  const features = document.querySelectorAll('.button-feature');
+
+  if (!featuresOpened) {
+    const firstFeature = document.querySelector('.button-feature');
+    if (firstFeature) {
+      const rect = firstFeature.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - 180; // ➔ plus haut que juste au bord
+      smoothScrollTo(targetY, 1000);
+
+      setTimeout(() => {
+        features.forEach(feature => {
+  feature.classList.remove('pinned');
+
+          if (!feature.querySelector('.vote-feature')) {
+            const button = document.createElement('button');
+            button.className = 'vote-feature';
+            button.textContent = "👍 Je vote pour cette fonctionnalité";
+            button.setAttribute('data-feature', feature.querySelector('.feature-title').textContent.trim());
+
+            feature.appendChild(button);
+
+            button.addEventListener('click', async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const featureName = button.getAttribute('data-feature');
+              try {
+                const response = await fetch('https://formspree.io/f/mpwdwpqe', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                  },
+                  body: JSON.stringify({ feature: featureName })
+                });
+                if (response.ok) {
+                  button.disabled = true;
+                  button.textContent = "Merci pour votre intérêt !";
+                } else {
+                  button.textContent = "Erreur, réessayez.";
+                }
+              } catch (error) {
+                console.error('Erreur de soumission:', error);
+                button.textContent = "Erreur.";
+              }
+            });
+          }
+        });
+
+        featuresOpened = true;
+        document.getElementById('show-features').textContent = "Masquer le sondage";
+      }, 1000);
+    }
+
+  } else {
+    features.forEach(feature => {
+      feature.classList.remove('pinned');
+      const voteButton = feature.querySelector('.vote-feature');
+      if (voteButton) {
+        voteButton.remove();
+      }
+    });
+
+    featuresOpened = false;
+    document.getElementById('show-features').textContent = "Donnez votre avis";
+  }
+});
+
+
+// SCROLL DOWN en cliquantf sur "Faites défiler"
+document.querySelector('.scroll-down').addEventListener('click', function(e) {
+  e.preventDefault();
+  const pages = document.querySelectorAll('.page');
+  if (pages.length > 0) {
+    const firstPage = pages[0];
+    const rect = firstPage.getBoundingClientRect();
+    const targetY = window.scrollY + rect.top - 80; // Décale un peu vers le haut pour que ce soit propre
+    smoothScrollTo(targetY, 1000);
+  }
+});
+
+let lastScrollTop = 0;
+const header = document.querySelector('.site-header');
+
+window.addEventListener('scroll', function() {
+  let scrollTop = window.scrollY || document.documentElement.scrollTop;
+  
+  if (scrollTop > lastScrollTop && scrollTop > 100) {
+    // Scroll vers le bas
+    header.classList.add('hide');
+  } else {
+    // Scroll vers le haut
+    header.classList.remove('hide');
+  }
+  
+  lastScrollTop = scrollTop;
+});
+
+
+</script>
+<footer style="text-align: center; margin: 4rem 0; color: var(--color-primary); font-size: 0.9rem;">
+  Contact : <a href="mailto:novlease.contact@gmail.com" style="color: var(--color-secondary); text-decoration: none;">novlease.contact@gmail.com</a>
+</footer>
+</body>
+</html>
