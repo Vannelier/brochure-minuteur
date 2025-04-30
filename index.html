@@ -775,57 +775,36 @@ N'hésitez pas à me contacter si le cœur vous en dit !
     }
   }
 
- // --- Bloc de vote révisé avec échelle 0 à 5 ---
-function ensureButton(featureEl) {
-  const title = featureEl.querySelector('.feature-title').textContent.trim();
-  const slug = slugify(title);
+  /* ---------- 3.  Fabrique (ou récupère) un bouton pour une feature ----- */
+  function ensureButton(featureEl) {
+    let btn = featureEl.querySelector('.vote-feature');
+    const title = featureEl.querySelector('.feature-title').textContent.trim();
+    const slug  = slugify(title);
 
-  // Évite de dupliquer le bloc si déjà présent
-  if (featureEl.querySelector('.vote-block')) return;
+    if (!btn) {                                            /* création si absent */
+      btn = document.createElement('button');
+      btn.className      = 'vote-feature';
+      btn.dataset.slug   = slug;                           /* <— clé fiable */
+      btn.dataset.title  = title;
+      btn.textContent    = '👍 Je vote pour cette fonctionnalité';
+      featureEl.appendChild(btn);
 
-  const container = document.createElement('div');
-  container.className = 'vote-block';
-  container.style.marginTop = '1rem';
-  container.innerHTML = `
-    <p style="margin-bottom: 0.5rem; font-weight: 500;">À quel point cette fonctionnalité vous intéresse-t-elle&nbsp;?</p>
-    <div class="rating" data-title="${title}" style="display: flex; justify-content: space-between; gap: 4px;">
-      ${[0, 1, 2, 3, 4, 5].map(value => `
-        <button class="rating-button" data-value="${value}" style="flex: 1; padding: 0.4rem 0.5rem; font-size: 0.9rem; border-radius: 8px; border: none; background-color: var(--color-front); color: var(--color-primary); cursor: pointer; transition: background-color 0.2s;">${value}</button>
-      `).join('')}
-    </div>
-  `;
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault(); e.stopPropagation();
+        try {
+          const r = await fetch('https://formspree.io/f/mpwdwpqe', {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({ feature: title })
+          });
+          if (r.ok) { voteStore.add(slug); hydrate(btn); }
+          else      { btn.textContent = 'Erreur, réessayez.'; }
+        } catch(err) { console.error(err); btn.textContent = 'Erreur.'; }
+      });
+    }
 
-  featureEl.appendChild(container);
-
-  const buttons = container.querySelectorAll('.rating-button');
-  buttons.forEach(button => {
-    button.addEventListener('click', async (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const selected = parseInt(button.dataset.value);
-      try {
-        const r = await fetch('https://formspree.io/f/mpwdwpqe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            feature: title,
-            interest: selected
-          })
-        });
-        if (r.ok) {
-          container.innerHTML = `<p style="color: var(--color-secondary); font-weight: 600; margin-top: 0.5rem;">Merci pour votre retour&nbsp;!</p>`;
-          voteStore.add(slug);
-        } else {
-          container.innerHTML = `<p style="color: red;">Erreur, réessayez.</p>`;
-        }
-      } catch (error) {
-        console.error('Erreur de soumission:', error);
-        container.innerHTML = `<p style="color: red;">Erreur technique.</p>`;
-      }
-    });
-  });
-}
+    hydrate(btn);                                         /* <— toujours */
+  }
 
   /* ---------- 4.  Initialisation globale ------------------------------- */
   document.addEventListener('DOMContentLoaded', () => {
@@ -1019,23 +998,74 @@ function smoothScrollTo(targetY, duration = 800) {
   requestAnimationFrame(animation);
 }
 
-const toggle = document.getElementById('show-features');
-toggle.addEventListener('click', () => {
+document.getElementById('show-features').addEventListener('click', () => {
   const features = document.querySelectorAll('.button-feature');
 
   if (!featuresOpened) {
-    features.forEach(f => {
-      f.classList.remove('pinned');
-      ensureButton(f); // <--- ceci affiche l'échelle 0 à 5
-    });
-    featuresOpened = true;
-    toggle.textContent = 'Masquer le sondage';
+    const firstFeature = document.querySelector('.button-feature');
+    if (firstFeature) {
+      const rect = firstFeature.getBoundingClientRect();
+      const targetY = window.scrollY + rect.top - 180; // ➔ plus haut que juste au bord
+      smoothScrollTo(targetY, 1000);
+
+      setTimeout(() => {
+        features.forEach(feature => {
+  feature.classList.remove('pinned');
+
+          if (!feature.querySelector('.vote-feature')) {
+            const button = document.createElement('button');
+            button.className = 'vote-feature';
+            button.textContent = "👍 Je vote pour cette fonctionnalité";
+            button.setAttribute('data-feature', feature.querySelector('.feature-title').textContent.trim());
+
+            feature.appendChild(button);
+
+            button.addEventListener('click', async (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const featureName = button.getAttribute('data-feature');
+              try {
+                const response = await fetch('https://formspree.io/f/mpwdwpqe', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                  },
+                  body: JSON.stringify({ feature: featureName })
+                });
+                if (response.ok) {
+                  button.disabled = true;
+                  button.textContent = "Merci pour votre intérêt !";
+                } else {
+                  button.textContent = "Erreur, réessayez.";
+                }
+              } catch (error) {
+                console.error('Erreur de soumission:', error);
+                button.textContent = "Erreur.";
+              }
+            });
+          }
+        });
+
+        featuresOpened = true;
+        document.getElementById('show-features').textContent = "Masquer le sondage";
+      }, 1000);
+    }
+
   } else {
-    features.forEach(f => f.classList.remove('pinned'));
+    features.forEach(feature => {
+      feature.classList.remove('pinned');
+      const voteButton = feature.querySelector('.vote-feature');
+      if (voteButton) {
+        voteButton.remove();
+      }
+    });
+
     featuresOpened = false;
-    toggle.textContent = 'Donnez votre avis';
+    document.getElementById('show-features').textContent = "Donnez votre avis";
   }
 });
+
 
 // SCROLL DOWN en cliquantf sur "Faites défiler"
 document.querySelector('.scroll-down').addEventListener('click', function(e) {
