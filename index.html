@@ -391,18 +391,21 @@
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
   }
-.rating-container div {
-  flex-wrap: wrap;
-}
+  .rating-container div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
 
-.rating-container div button.vote-feature {
-  flex: 1 1 15%;
-  min-width: 42px;
-  padding: 0.6rem 0.8rem;
-  font-size: 1rem;
-}
-.rating-container div button.vote-feature {
-  margin: 0.3rem 0;
+  .rating-container .vote-feature {
+    flex: 0 1 calc(16% - 0.5rem);
+    min-width: 42px;
+    max-width: 60px;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    text-align: center;
+  }
 }
 
   .hero {
