@@ -566,6 +566,21 @@ p {
   color: var(--color-secondary);
 }
 
+.vote-feature:not(:disabled) {
+  background-color: var(--color-blob);
+  color: var(--color-primary);
+  border: 1px solid var(--color-front);
+  font-weight: 600;
+  box-shadow: none;
+  animation: none;
+}
+
+.rating-container p {
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
 
 </style>
 </head>
@@ -744,22 +759,6 @@ N'hésitez pas à me contacter si le cœur vous en dit !
 
 (function () {
 
-  /* ---------- 1.  Helpers ---------------------------------------------- */
-  const STORAGE_KEY = 'novleaseVotes';
-
-  /* 1.a  → slug sans accent, en minuscules (ex. « Activation sans contact » → activation-sans-contact) */
-  const slugify = str =>
-      str.toLowerCase()
-         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // enlève accents
-         .replace(/[^a-z0-9]+/g, '-')                       // remplace tout le reste par «-»
-         .replace(/(^-|-$)/g, '');
-
-  const voteStore = {
-    _read()  { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch { return []; } },
-    _write(l){ localStorage.setItem(STORAGE_KEY, JSON.stringify(l)); },
-    has(s)   { return this._read().includes(s); },
-    add(s)   { const l = this._read(); if (!l.includes(s)){ l.push(s); this._write(l);} }
-  };
 
   /* ---------- 2.  Applique l’état “déjà voté” --------------------------- */
   function hydrate(btn) {
@@ -1030,7 +1029,6 @@ function smoothScrollTo(targetY, duration = 800) {
 
   requestAnimationFrame(animation);
 }
-
 document.getElementById('show-features').addEventListener('click', () => {
   const features = document.querySelectorAll('.button-feature');
 
@@ -1053,50 +1051,49 @@ document.getElementById('show-features').addEventListener('click', () => {
           const label = document.createElement('p');
           label.textContent = 'À quel point cette fonctionnalité vous semble-t-elle utile ?';
           label.style.marginBottom = '0.5rem';
+          label.style.color = 'var(--color-primary)';
           ratingContainer.appendChild(label);
 
           const buttonsContainer = document.createElement('div');
           buttonsContainer.style = 'display: flex; gap: 0.5rem; justify-content: center;';
 
-for (let i = 0; i <= 5; i++) {
-  const ratingButton = document.createElement('button');
-  ratingButton.className = 'vote-feature';
-  ratingButton.textContent = i;
+          const featureSlug = slugify(feature.querySelector('.feature-title').textContent.trim());
 
-  const featureSlug = slugify(feature.querySelector('.feature-title').textContent.trim());
+          if (voteStore.has(featureSlug)) {
+            buttonsContainer.innerHTML = `<p style="margin-top:0.5rem; color: var(--color-primary); font-weight: bold;">✓ ${voteStore.get(featureSlug)}/5</p>`;
+          } else {
+            for (let i = 0; i <= 5; i++) {
+              const ratingButton = document.createElement('button');
+              ratingButton.className = 'vote-feature';
+              ratingButton.textContent = i;
+              ratingButton.style.color = 'var(--color-primary)';
 
-  // Désactive le bouton si déjà voté
-  if (voteStore.has(featureSlug)) {
-    ratingButton.disabled = true;
-    ratingButton.textContent = voteStore.get(featureSlug) == i ? `✓ ${i}` : i;
-  }
+              ratingButton.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
 
-  ratingButton.addEventListener('click', async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+                try {
+                  const response = await fetch('https://formspree.io/f/mpwdwpqe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ feature: feature.querySelector('.feature-title').textContent.trim(), score: i })
+                  });
 
-    try {
-      const response = await fetch('https://formspree.io/f/mpwdwpqe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feature: feature.querySelector('.feature-title').textContent.trim(), score: i })
-      });
+                  if (response.ok) {
+                    voteStore.add(featureSlug, i);
+                    buttonsContainer.innerHTML = `<p style="margin-top:0.5rem; color: var(--color-primary); font-weight: bold;">✓ ${i}/5</p>`;
+                  } else {
+                    ratingButton.textContent = "Erreur";
+                  }
+                } catch (error) {
+                  console.error('Erreur de soumission:', error);
+                  ratingButton.textContent = "Erreur";
+                }
+              });
 
-      if (response.ok) {
-        voteStore.add(featureSlug, i);
-        buttonsContainer.innerHTML = `<p style="margin-top:0.5rem;">Merci pour votre note de ${i}/5 !</p>`;
-      } else {
-        ratingButton.textContent = "Erreur";
-      }
-    } catch (error) {
-      console.error('Erreur de soumission:', error);
-      ratingButton.textContent = "Erreur";
-    }
-  });
-
-  buttonsContainer.appendChild(ratingButton);
-}
-
+              buttonsContainer.appendChild(ratingButton);
+            }
+          }
 
           ratingContainer.appendChild(buttonsContainer);
           feature.appendChild(ratingContainer);
@@ -1118,6 +1115,7 @@ for (let i = 0; i <= 5; i++) {
     document.getElementById('show-features').textContent = "Donnez votre avis";
   }
 });
+
 
 
 // SCROLL DOWN en cliquantf sur "Faites défiler"
