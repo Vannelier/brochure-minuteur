@@ -581,14 +581,17 @@ p {
   font-weight: bold;
 }
 
-
 </style>
 </head>
 <body>
 
 <header class="site-header">
   <div class="logo">Novlease <span>Smart Timer</span></div>
+  <button id="show-features-header" style="margin-left: auto; background:none; border:none; color:var(--color-primary); font-weight:600; cursor:pointer; font-size:1rem;">
+    Donnez votre avis
+  </button>
 </header>
+
 
 
 <!-- PARALLAX BACKGROUND -->
@@ -839,6 +842,16 @@ function ensureRatingScale(featureEl) {
 
   /* ---------- 4.  Initialisation globale ------------------------------- */
   document.addEventListener('DOMContentLoaded', () => {
+
+const headerVoteButton = document.getElementById('show-features-header');
+const mainVoteButton = document.getElementById('show-features');
+
+if (headerVoteButton && mainVoteButton) {
+  headerVoteButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    mainVoteButton.click();
+  });
+}
 
     /* 4.a  Boutons déjà dans le HTML (si vous en avez laissés) */
     document.querySelectorAll('.vote-feature')
