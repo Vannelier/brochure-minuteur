@@ -393,18 +393,18 @@
   }
   .rating-container div {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.5rem;
+    flex-wrap: nowrap; /* interdit le retour à la ligne */
+    justify-content: space-between;
+    overflow-x: auto; /* autorise le scroll horizontal si nécessaire */
+    gap: 0.4rem;
   }
 
   .rating-container .vote-feature {
-    flex: 0 1 calc(16% - 0.5rem);
-    min-width: 42px;
-    max-width: 60px;
+    flex: 1 1 auto;
+    min-width: 40px;
     padding: 0.6rem 0.8rem;
-    font-size: 1rem;
-    text-align: center;
+    font-size: 0.9rem;
+    white-space: nowrap;
   }
 }
 
