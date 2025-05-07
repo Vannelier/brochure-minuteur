@@ -401,13 +401,15 @@
   }
 
   .header-container .logo {
-    font-size: 0.1rem;
-    line-height: 1.1;
-    max-width: 80%;
-    margin: 0 auto;
-    text-align: center;
-    white-space: nowrap;
+
+    font-size: 0.75rem !important;      /* ← forçage */
+    line-height: 1.2;
   }
+
+  .header-container .logo span {
+    font-size: 0.75rem !important;      /* ← pour le "Smart Timer" */
+  }
+}
 
   .button-cart {
     position: absolute;
