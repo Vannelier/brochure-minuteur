@@ -388,56 +388,48 @@
   animation: popFade 1s ease forwards;
   opacity: 0;
 }
-  
 @media (max-width: 768px) {
   .site-header {
-    padding: 0rem;
-    min-height: 52px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    min-height: 50px;
   }
 
   .header-container {
-    padding: 0;
+    padding-right: 0;
     position: relative;
   }
 
   .header-container .logo {
     font-size: 1rem;
     line-height: 1.2;
-    max-width: 72%;
-    margin: 0 auto;
-    text-align: center;
+    text-align: center;       /* garde l’alignement central */
+    max-width: 80%;           /* évite les débordements */
+    margin: 0 auto;           /* recentre si besoin */
   }
 
   .button-cart {
     position: absolute;
-    top: 0;
-    right: 0;
-    transform: none;
-    width: 44px;
-    height: 48px;
-    padding: 0;
-    background: var(--color-front);
-    border-radius: 50%;
-    box-shadow: var(--shadow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    top: 6px;                 /* descend légèrement pour éviter l’écrasement */
+    right: 0;                 /* supprime toute marge à droite */
+    width: 34px;
+    height: 34px;
+    padding: 0.4rem;
   }
 
   .button-cart svg {
-    width: 26px;
-    height: 26px;
+    width: 18px;
+    height: 18px;
     stroke-width: 2.2;
-    stroke: var(--color-primary);
   }
 
   .price-badge {
     font-size: 0.6rem;
-    padding: 2px 6px;
-    bottom: -6px;
+    padding: 1px 5px;
+    bottom: -4px;
     right: -6px;
   }
-  
+
   .rating-container div {
     display: flex;
     flex-wrap: nowrap;
