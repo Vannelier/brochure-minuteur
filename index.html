@@ -389,10 +389,10 @@
   opacity: 0;
 }
 @media (max-width: 768px) {
+@media (max-width: 480px) {
   .site-header {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-    min-height: 50px;
+    padding: 0.4rem 0.6rem;
+    min-height: 52px;
   }
 
   .header-container {
@@ -403,32 +403,41 @@
   .header-container .logo {
     font-size: 1rem;
     line-height: 1.2;
-    text-align: center;       /* garde l’alignement central */
-    max-width: 80%;           /* évite les débordements */
-    margin: 0 auto;           /* recentre si besoin */
+    text-align: center;
+    max-width: 80%;
+    margin: 0 auto;
   }
 
   .button-cart {
     position: absolute;
-    top: 6px;                 /* descend légèrement pour éviter l’écrasement */
-    right: 0;                 /* supprime toute marge à droite */
-    width: 34px;
-    height: 34px;
-    padding: 0.4rem;
+    top: 8px;
+    right: 8px; /* aligne parfaitement à droite */
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: var(--color-front);
+    border-radius: 50%;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .button-cart svg {
-    width: 18px;
-    height: 18px;
+    width: 18px !important; /* force la réduction de l’icône */
+    height: 18px !important;
     stroke-width: 2.2;
+    stroke: var(--color-primary);
   }
 
   .price-badge {
-    font-size: 0.6rem;
+    font-size: 0.55rem;
     padding: 1px 5px;
     bottom: -4px;
     right: -6px;
   }
+}
+
 
   .rating-container div {
     display: flex;
