@@ -392,32 +392,41 @@
   .site-header {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
+    min-height: 50px;
   }
 
   .header-container {
-    padding-right: 48px;
+    padding-right: 0;
+    position: relative;
   }
 
   .header-container .logo {
-    font-size: 1.2rem;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;       /* garde l’alignement central */
+    max-width: 80%;           /* évite les débordements */
+    margin: 0 auto;           /* recentre si besoin */
   }
 
   .button-cart {
-    width: 42px;
-    height: 42px;
+    position: absolute;
+    top: 6px;                 /* descend légèrement pour éviter l’écrasement */
+    right: 0;                 /* supprime toute marge à droite */
+    width: 34px;
+    height: 34px;
     padding: 0.4rem;
   }
 
   .button-cart svg {
-    width: 20px;
-    height: 20px;
-    stroke-width: 2;
+    width: 18px;
+    height: 18px;
+    stroke-width: 2.2;
   }
 
   .price-badge {
-    font-size: 0.65rem;
-    padding: 2px 5px;
-    bottom: -6px;
+    font-size: 0.6rem;
+    padding: 1px 5px;
+    bottom: -4px;
     right: -6px;
   }
 
@@ -748,7 +757,7 @@ p {
   max-width: 240px;
   z-index: 9999;
 ">
-  Ce produit est encore en développement.<br>Votre clic nous aide à évaluer l’intérêt.
+  Ce produit est encore en développement.<br>
 </div>
 
   </div>
