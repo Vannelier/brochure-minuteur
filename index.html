@@ -48,8 +48,6 @@
 --c-number:#2A8B7E33;
   }
 }
-
-
   
   html, body {
     height: auto;
@@ -142,12 +140,11 @@
     text-decoration: none;
     z-index: 1;
   }
+  
   .button-feature:hover, .button-cta:hover {
     background-color: var(--color-primary);
   }
 
-
-  
   .dropdown-info {
     max-height: 0;
     overflow: hidden;
@@ -197,6 +194,7 @@
     align-items: center;
     justify-content: center;
   }
+  
   #modal-prototype .modal-content {
     background: var(--color-bg);
     padding: 2rem;
@@ -207,6 +205,7 @@
     position: relative;
     animation: fadeIn 0.4s ease;
   }
+  
   #close-modal {
     position: absolute;
     top: 12px;
@@ -217,10 +216,12 @@
     color: var(--color-secondary);
     cursor: pointer;
   }
+  
   @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
   }
+  
 .vote-feature {
   display: block;
   width: 100%;
@@ -238,16 +239,14 @@
   animation: pulse-soft 2.2s ease-in-out infinite;
 }
 
-/* --- Hover (facultatif, inchangé) ---------------------------------- */
 .vote-feature:hover:not(:disabled){
   transform: translateY(-2px);
   background-color: var(--color-secondary);
 }
 
-/* --- Bouton désactivé  ➜  on stoppe l’animation -------------------- */
 .vote-feature:disabled{
-  animation: none;           /* <— coupe le pulse   */
-  transform: scale(1);       /* s’assure qu’il revient à 1   */
+  animation: none;
+  transform: scale(1);
   background: var(--color-blob);
   color: var(--color-primary);
   cursor: default;
@@ -287,12 +286,12 @@
   animation: fadeInUp 1s ease forwards;
 }
 
-
 .hero p {
   font-size: 1.2rem;
   max-width: 500px;
   color: var(--color-primary);
 }
+  
 .scroll-down {
   margin-top: 2rem;
   text-align: center;
@@ -347,11 +346,11 @@
 }
 
 .button-feature:hover .toggle-icon {
-  color: var(--color-blob); /* Change la couleur au survol */
+  color: var(--color-blob); 
 }
 
 .button-feature.pinned .toggle-icon {
-  transform: rotate(45deg); /* Tourne quand c’est ouvert */
+  transform: rotate(45deg); 
 }
 
 @media (min-width: 768px) {
@@ -362,14 +361,15 @@
     margin-top: 4rem; 
   }
 }
+  
   .hero {
     max-width: 700px;
-    padding-top: 4rem; /* ➔ tu peux regrouper ici */
+    padding-top: 4rem; 
   }
 }
   
   .button-feature {
-    width: 100%; /* ➔ Prend toute la largeur disponible */
+    width: 100%;
   }
 }
 
@@ -395,7 +395,7 @@
   }
 
   .header-container {
-    padding-right: 48px; /* espace pour que le logo n'empiète pas sur le caddie */
+    padding-right: 48px;
   }
 
   .header-container .logo {
@@ -421,12 +421,11 @@
     right: -6px;
   }
 
-
   .rating-container div {
     display: flex;
-    flex-wrap: nowrap; /* interdit le retour à la ligne */
+    flex-wrap: nowrap;
     justify-content: space-between;
-    overflow-x: auto; /* autorise le scroll horizontal si nécessaire */
+    overflow-x: auto;
     gap: 0.4rem;
   }
 
@@ -461,8 +460,8 @@
   }
 
   .scroll-down {
-    margin-top: 2.5rem; /* <-- Ici, on la remonte */
-    font-size: 0.8rem; /* texte plus petit */
+    margin-top: 2.5rem;
+    font-size: 0.8rem;
   }
 
   .scroll-down .arrow {
@@ -470,13 +469,11 @@
     height: 20px;
   }
 
-  /* Bonus : réduire la taille du footer sur mobile */
   footer {
     font-size: 0.8rem;
   }
 }
 
-/* --- AMÉLIORATIONS GÉNÉRALES --- */
 h1, h2, h3 {
   font-weight: 700;
   color: var(--color-secondary);
@@ -494,7 +491,6 @@ p {
   line-height: 1.6;
 }
 
-/* --- DÉCORATION DE SECTION "Fonctionnalités en développement" --- */
 .page > h2:first-of-type {
   position: relative;
   margin-bottom: 1rem;
@@ -510,7 +506,6 @@ p {
   border-radius: 2px;
 }
 
-/* --- FLÈCHE "Faites défiler" PLUS DOUCE --- */
 .scroll-down {
   margin-top: 1.5rem;
   text-align: center;
@@ -529,7 +524,6 @@ p {
   animation: bounce 2s infinite ease-in-out;
 }
 
-/* --- TRANSITION TEXTES AU SCROLL --- */
 .page {
   opacity: 0;
   transform: translateY(40px);
@@ -540,8 +534,6 @@ p {
   opacity: 1;
   transform: translateY(0);
 }
-
-
 
 .button-cta, 
 #show-features,
@@ -570,13 +562,10 @@ p {
   transform: translateY(-2px);
 }
 
-
-/* --- HARMONISATION DES BOUTONS --- */
 .button-cta, .button-feature {
   border-radius: 16px;
   font-weight: 600;
 }
-
 
 .dropdown-info{
   overflow: hidden;
@@ -590,8 +579,8 @@ p {
   left: 0;
   width: 100%;
   background: var(--color-bg);
-  padding: 1rem 2rem; /* ← assure un bon espace haut et bas */
-  min-height: 64px;   /* ← force une hauteur minimum agréable */
+  padding: 1rem 2rem;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
