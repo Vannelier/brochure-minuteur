@@ -145,6 +145,8 @@
   .button-feature:hover, .button-cta:hover {
     background-color: var(--color-primary);
   }
+
+
   
   .dropdown-info {
     max-height: 0;
@@ -510,8 +512,11 @@ p {
   transform: translateY(0);
 }
 
+
+
 .button-cta, 
-#show-features {
+#show-features,
+ #show-features-header {
   display: block;
   background-color: var(--color-secondary);
   color: white;
@@ -597,6 +602,35 @@ p {
   font-weight: bold;
 }
 
+
+
+#show-features,
+#show-features-header {
+  display: block;                             /* même comportement que .button-cta */
+  max-width: 300px;                           /* largeur restreinte */
+  margin: 0.5rem auto;                        /* centrage vertical + espacement réduit */
+  background-color: #13514F;     /* plus sombre que le CTA */
+  color: #ffffff;                             /* texte blanc */
+  text-align: center;
+  padding: 0.6rem 1.2rem;                     /* padding réduit */
+  font-size: 0.9rem;                          /* texte plus petit */
+  font-weight: 600;                           /* même graisse que .button-cta */
+  border: none;
+  border-radius: 16px;                        /* coins arrondis identiques */
+  box-shadow: var(--shadow);                  /* même ombre que .button-cta */
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#show-features:hover,
+#show-features-header:hover {
+  background-color: #18655B;   /* éclairci légèrement au survol */
+  transform: translateY(-1px);                /* petit “lift” au survol */
+}
+
+
+
 </style>
 </head>
 <body>
@@ -634,7 +668,10 @@ Fonctionnalités en développement
 <p style="text-align: center; color: var(--color-secondary); font-size: 1rem; margin-bottom: 3rem;">
 Découvrez les principales fonctionnalités prévues pour Novlease Smart Timer.<br>
 </p>
-
+<div style="text-align:center; margin-bottom: 2rem;">
+<button id="show-features-header" class="button-toggle">Notez ces fonctionnalités</button>
+  </button>
+</div>
   
   <div class="button-feature" tabindex="0">
     <div class="feature-header">
@@ -712,9 +749,8 @@ Découvrez les principales fonctionnalités prévues pour Novlease Smart Timer.<
 <div class="page">
   <h2>Votez pour les features que vous aimez et aidez-nous à créer l'outil parfait !</h2>
   <div style="text-align:center; margin:2rem 0;">
-    <button id="show-features" style="padding:1rem 2rem; background-color:var(--color-front); border:none; border-radius:12px; color:var(--color-primary); font-size:1.1rem; box-shadow:var(--shadow); cursor:pointer;">
-      Donnez votre avis
-    </button>
+<button id="show-features" class="button-toggle">Notez ces fonctionnalités</button>
+
   </div>
 <p style="text-align: center;">Vous avez une idée de fonctionnalité, une remarque ou une question ? N'hésitez pas à nous écrire ici!</p>
   <a href="#prototype" class="button-cta">Laissez-nous un message</a>
@@ -896,7 +932,7 @@ if (headerVoteButton && mainVoteButton) {
         features.forEach(f => f.classList.remove('pinned'));
         /* on ne supprime plus les boutons → l’état reste en place */
         open = false;
-        toggle.textContent = 'Donnez votre avis';
+        toggle.textContent = 'Notez ces fonctionnalités';
       }
     });
   });
@@ -1059,7 +1095,14 @@ function smoothScrollTo(targetY, duration = 800) {
 
   requestAnimationFrame(animation);
 }
+
+
+
 document.getElementById('show-features').addEventListener('click', () => {
+
+
+const mainToggle   = document.getElementById('show-features');
+const headerToggle = document.getElementById('show-features-header');
   const features = document.querySelectorAll('.button-feature');
 
   if (!featuresOpened) {
@@ -1131,7 +1174,8 @@ document.getElementById('show-features').addEventListener('click', () => {
       });
 
       featuresOpened = true;
-      document.getElementById('show-features').textContent = "Masquer le sondage";
+  mainToggle.textContent   = "Masquer le sondage";
+  headerToggle.textContent = "Masquer le sondage";
     }
 
   } else {
@@ -1142,7 +1186,8 @@ document.getElementById('show-features').addEventListener('click', () => {
     });
 
     featuresOpened = false;
-    document.getElementById('show-features').textContent = "Donnez votre avis";
+  mainToggle.textContent   = "Notez ces fonctionnalités";
+  headerToggle.textContent = "Notez ces fonctionnalités";
   }
 });
 
