@@ -866,16 +866,24 @@ Découvrez les principales fonctionnalités prévues pour Novlease Smart Timer.<
       <p>Grâce à son mode veille automatique, la consommation énergétique du minuteur est optimisée pour une autonomie maximale.</p>
     </div>
   </div>
-
-</div>
+<div style="text-align:center; margin: 2rem;">
 <button id="show-features" class="button-toggle">Notez ces fonctionnalités</button>
 </div>
 
-
+</div>
+<div style="background-color: var(--color-blob); padding: 1.5rem; border-radius: 16px; text-align: center; margin-bottom: 2rem; box-shadow: var(--shadow); max-width: 600px; margin-left: auto; margin-right: auto;">
+  <h3 style="color: var(--color-secondary); margin-bottom: 0.8rem;">Merci pour vos retours !</h3>
+  <p style="color: var(--color-primary); font-size: 1rem; margin-bottom: 0;">
+    Chaque vote nous aide à créer un minuteur vraiment utile, pensé avec vous.<br>
+    Une suggestion, une contrainte métier, une idée simple ? On est preneur.
+  </p>
   </div>
-<p style="text-align: center;">Vous avez une idée de fonctionnalité, une remarque ou une question ? N'hésitez pas à nous écrire ici!</p>
   <a href="#prototype" class="button-cta">Laissez-nous un message</a>
 </div>
+</div>
+
+
+
 
 <div class="page">
   <a href="#" id="toggle-about" style="display:block; text-align:center; margin:2rem 0; color:var(--color-secondary); text-decoration:underline; font-weight:600; cursor:pointer;">
@@ -1180,9 +1188,14 @@ document.querySelectorAll('.vote-feature').forEach(button => {
 let featuresOpened = false; // état initial
 
 
-function smoothScrollTo(targetY, duration = 800) {
+function smoothScrollTo(targetY) {
   const startY = window.scrollY;
   const distance = targetY - startY;
+  const maxDuration = 1500;
+  const baseSpeed = 1.7;
+
+  const duration = Math.min(maxDuration, Math.abs(distance) * baseSpeed);
+
   let startTime = null;
 
   function animation(currentTime) {
@@ -1190,11 +1203,7 @@ function smoothScrollTo(targetY, duration = 800) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
 
-    // Easing quartique très doux
-    const easeOutQuart = (x) => {
-      return 1 - Math.pow(1 - x, 4);
-    };
-
+    const easeOutQuart = (x) => 1 - Math.pow(1 - x, 4);
     const easedProgress = easeOutQuart(progress);
 
     window.scrollTo(0, startY + distance * easedProgress);
@@ -1206,6 +1215,7 @@ function smoothScrollTo(targetY, duration = 800) {
 
   requestAnimationFrame(animation);
 }
+
 
 document.getElementById('show-features').addEventListener('click', () => {
 const mainToggle   = document.getElementById('show-features');
