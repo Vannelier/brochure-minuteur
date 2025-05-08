@@ -670,15 +670,14 @@ p {
 .header-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
   position: relative;
 }
 
 .header-container .logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: static;
+  transform: none;
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--color-primary);
@@ -691,9 +690,8 @@ p {
 }
 
 .button-cart {
-  position: absolute;
-  right: 0;
-  margin-right: 1rem;
+  position: static;
+  margin: 0;
   background: var(--color-front);
   border: none;
   padding: 0.6rem;
@@ -736,7 +734,6 @@ p {
 <body>
 <header class="site-header">
   <div class="header-container">
-    <div class="spacer-left"></div>
     <div class="logo">Novlease <span>Smart Timer</span></div>
     <button id="fake-preorder" title="Je veux ce produit" class="button-cart">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="var(--color-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart">
