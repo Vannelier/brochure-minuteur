@@ -73,7 +73,7 @@
 }
 
 @media (prefers-color-scheme: dark){
-  .hero img{            /* ↓ 85 % de luminosité, léger contraste          */
+  .hero img{
     filter:brightness(.85) contrast(1.05);
   }
 }
@@ -402,12 +402,12 @@
 
   .header-container .logo {
 
-    font-size: 1.2rem !important;      /* ← forçage */
+    font-size: 1.2rem !important;
     line-height: 1.2;
   }
 
   .header-container .logo span {
-    font-size: 1.1rem !important;      /* ← pour le "Smart Timer" */
+    font-size: 1.1rem !important;
   }
 }
 
@@ -606,7 +606,6 @@ p {
   z-index: 100;
 }
 
-
 .site-header.hide {
   transform: translateY(-100%);
   opacity: 0;
@@ -643,18 +642,18 @@ p {
 
 #show-features,
 #show-features-header {
-  display: block;                             /* même comportement que .button-cta */
-  max-width: 300px;                           /* largeur restreinte */
-  margin: 0.5rem auto;                        /* centrage vertical + espacement réduit */
-  background-color: #13514F;     /* plus sombre que le CTA */
-  color: #ffffff;                             /* texte blanc */
+  display: block;
+  max-width: 300px;
+  margin: 0.5rem auto;
+  background-color: #13514F;
+  color: #ffffff;
   text-align: center;
-  padding: 0.6rem 1.2rem;                     /* padding réduit */
-  font-size: 0.9rem;                          /* texte plus petit */
-  font-weight: 600;                           /* même graisse que .button-cta */
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   border: none;
-  border-radius: 16px;                        /* coins arrondis identiques */
-  box-shadow: var(--shadow);                  /* même ombre que .button-cta */
+  border-radius: 16px;
+  box-shadow: var(--shadow);
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
@@ -662,10 +661,9 @@ p {
 
 #show-features:hover,
 #show-features-header:hover {
-  background-color: #18655B;   /* éclairci légèrement au survol */
-  transform: translateY(-1px);                /* petit “lift” au survol */
+  background-color: #18655B;
+  transform: translateY(-1px);
 }
-
 
 .header-container {
   display: flex;
@@ -731,13 +729,9 @@ p {
   line-height: 1;
 }
 
-
-
-
 </style>
 </head>
 <body>
-
 <header class="site-header">
   <div class="header-container">
     <div class="spacer-left"></div>
@@ -770,8 +764,6 @@ p {
 
   </div>
 </header>
-
-
 
 <!-- PARALLAX BACKGROUND -->
 <div id="parallax-container">
@@ -940,11 +932,7 @@ N'hésitez pas à me contacter si le cœur vous en dit !
 
 <!-- SCRIPTS -->
 <script>
-
-
 (function () {
-
-
   /* ---------- 2.  Applique l’état “déjà voté” --------------------------- */
   function hydrate(btn) {
     const slug = btn.dataset.slug;
@@ -1020,9 +1008,6 @@ function ensureRatingScale(featureEl) {
     featureEl.appendChild(container);
   }
 }
-
-
-  /* ---------- 4.  Initialisation globale ------------------------------- */
   document.addEventListener('DOMContentLoaded', () => {
 
 const headerVoteButton = document.getElementById('show-features-header');
@@ -1037,7 +1022,7 @@ if (headerVoteButton && mainVoteButton) {
 
     /* 4.a  Boutons déjà dans le HTML (si vous en avez laissés) */
     document.querySelectorAll('.vote-feature')
-            .forEach(hydrate);                             // slug vient déjà du data-attr
+            .forEach(hydrate);
 
     /* 4.b  Logique “Donnez votre avis” */
     const toggle = document.getElementById('show-features');
@@ -1059,7 +1044,6 @@ if (headerVoteButton && mainVoteButton) {
 
       } else {
         features.forEach(f => f.classList.remove('pinned'));
-        /* on ne supprime plus les boutons → l’état reste en place */
         open = false;
         toggle.textContent = 'Notez ces fonctionnalités';
       }
@@ -1089,8 +1073,6 @@ document.querySelector('.hero img').style.opacity = 1;
 
   });
 });
-
-
     const modal = document.getElementById('modal-prototype');
     const openModalBtn = document.querySelector('.button-cta');
     const closeModalBtn = document.getElementById('close-modal');
@@ -1225,11 +1207,7 @@ function smoothScrollTo(targetY, duration = 800) {
   requestAnimationFrame(animation);
 }
 
-
-
 document.getElementById('show-features').addEventListener('click', () => {
-
-
 const mainToggle   = document.getElementById('show-features');
 const headerToggle = document.getElementById('show-features-header');
   const features = document.querySelectorAll('.button-feature');
@@ -1385,8 +1363,6 @@ const slugify = str =>
      .replace(/[^a-z0-9]+/g, '-')
      .replace(/(^-|-$)/g, '');
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const feedback = document.getElementById('preorder-feedback');
   const button = document.getElementById('fake-preorder');
@@ -1428,7 +1404,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000);
   });
 });
-
 
 </script>
 <footer style="text-align: center; margin: 4rem 0; color: var(--color-primary); font-size: 0.9rem;">
