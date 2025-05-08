@@ -1367,23 +1367,58 @@ const voteStore = {
   }
 };
 
+
+const PREORDER_KEY = 'novleasePreorderClicked';
+const cartStore = {
+  _read() {
+    try {
+      return JSON.parse(localStorage.getItem(PREORDER_KEY)) || { clicked: false };
+    } catch {
+      return { clicked: false };
+    }
+  },
+  _write(data) {
+    localStorage.setItem(PREORDER_KEY, JSON.stringify(data));
+  },
+  hasClicked() {
+    return this._read().clicked;
+  },
+  markClicked() {
+    const data = this._read();
+    data.clicked = true;
+    this._write(data);
+  }
+};
+// ————————————————————————————————————————————————
+
+
 const slugify = str =>
   str.toLowerCase()
      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
      .replace(/[^a-z0-9]+/g, '-')
      .replace(/(^-|-$)/g, '');
 
+// Hydratation et click handler pour le bouton panier
 document.addEventListener('DOMContentLoaded', () => {
+  const button   = document.getElementById('fake-preorder');
   const feedback = document.getElementById('preorder-feedback');
-  const button = document.getElementById('fake-preorder');
+  const badge    = button.querySelector('.price-badge');
 
+  // 1) Au chargement, si déjà cliqué → on masque la pastille
+  if (cartStore.hasClicked()) {
+    badge.style.display = 'none';
+    button.disabled     = true;   // vous pouvez garder la désactivation si besoin
+  }
+
+  // 2) Au clic, on enregistre, on affiche le feedback, et on masque la pastille
   button.addEventListener('click', async () => {
-    // Animation de clic
-    button.disabled = true;
-    button.style.opacity = '0.6';
-    button.style.transform = 'scale(0.95)';
+    cartStore.markClicked();
 
-    // Optionnel : envoie une trace de clic à Formspree
+    badge.style.display = 'none';
+    // on conserve seulement la désactivation si vous le souhaitez :
+    button.disabled = true;
+
+    // … reste de votre fetch Formspree + feedback inchangé …
     try {
       await fetch('https://formspree.io/f/mpwdwpqe', {
         method: 'POST',
@@ -1394,23 +1429,14 @@ document.addEventListener('DOMContentLoaded', () => {
       console.warn('Pas de réponse Formspree. Pas bloquant.');
     }
 
-    // Affiche la bulle
-    feedback.style.display = 'block';
-    feedback.style.opacity = '0';
+    feedback.style.display    = 'block';
+    feedback.style.opacity    = '0';
     feedback.style.transition = 'opacity 0.3s ease';
-    requestAnimationFrame(() => {
-      feedback.style.opacity = '1';
-    });
+    requestAnimationFrame(() => feedback.style.opacity = '1');
 
-    // Cache la bulle après 5 secondes
     setTimeout(() => {
       feedback.style.opacity = '0';
-      setTimeout(() => {
-        feedback.style.display = 'none';
-        button.disabled = false;
-        button.style.opacity = '1';
-        button.style.transform = 'scale(1)';
-      }, 300);
+      setTimeout(() => feedback.style.display = 'none', 300);
     }, 5000);
   });
 });
