@@ -729,6 +729,17 @@ p {
   line-height: 1;
 }
 
+#toggle-about {
+  color: var(--color-secondary);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+#toggle-about.active {
+  opacity: 0.4; /* ← estompe visuellement le lien quand actif */
+}
+
+
 </style>
 </head>
 <body>
@@ -1148,16 +1159,23 @@ if (layer.dataset.speed === "0.2") {
     }, { passive: true });
   })();
 
-document.getElementById('toggle-about').addEventListener('click', function(e) {
+const toggleAboutBtn = document.getElementById('toggle-about');
+const about = document.getElementById('about-content');
+
+toggleAboutBtn.addEventListener('click', function(e) {
   e.preventDefault();
-  const about = document.getElementById('about-content');
-  if (about.style.display === 'none' || about.style.display === '') {
+  const isOpen = about.style.display === 'block';
+
+  if (!isOpen) {
     about.style.display = 'block';
     about.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toggleAboutBtn.classList.add('active');
   } else {
     about.style.display = 'none';
+    toggleAboutBtn.classList.remove('active');
   }
 });
+
 // SYSTEME DE VOTE PAR FEATURE
 document.querySelectorAll('.vote-feature').forEach(button => {
   button.addEventListener('click', async (e) => {
