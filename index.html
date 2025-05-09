@@ -31,7 +31,7 @@
     --color-primary: #156C5E;
     --color-secondary: #2A8B7E;
     --shadow: 0 4px 12px rgba(42, 139, 126, 0.15);
-    --c-number: #0F766E38;   
+    --c-number: #0F766E38;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -740,6 +740,40 @@ p {
 }
 
 
+.loading-text {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--color-secondary);
+  letter-spacing: 0.05em;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.loading-text span {
+  opacity: 0.2;
+  animation: glowLetter 1.2s infinite;
+  display: inline-block;
+}
+
+.loading-text span:nth-child(1) { animation-delay: 0s; }
+.loading-text span:nth-child(2) { animation-delay: 0.1s; }
+.loading-text span:nth-child(3) { animation-delay: 0.2s; }
+.loading-text span:nth-child(4) { animation-delay: 0.3s; }
+.loading-text span:nth-child(5) { animation-delay: 0.4s; }
+.loading-text span:nth-child(6) { animation-delay: 0.5s; }
+.loading-text span:nth-child(7) { animation-delay: 0.6s; }
+.loading-text span:nth-child(8) { animation-delay: 0.7s; }
+.loading-text span:nth-child(9) { animation-delay: 0.8s; }
+.loading-text span:nth-child(10) { animation-delay: 0.9s; }
+.loading-text span:nth-child(11) { animation-delay: 1.0s; }
+.loading-text span:nth-child(12) { animation-delay: 1.1s; }
+
+@keyframes glowLetter {
+  0%, 100% { opacity: 0.2; }
+  50%      { opacity: 1; }
+}
+
+
 </style>
 </head>
 <body>
@@ -1286,9 +1320,22 @@ const headerToggle = document.getElementById('show-features-header');
                     body: JSON.stringify({ feature: feature.querySelector('.feature-title').textContent.trim(), score: i })
                   });
 
-                  if (response.ok) {
-                    voteStore.add(featureSlug, i);
-                    buttonsContainer.innerHTML = `<p style="margin-top:0.5rem; color: var(--color-primary); font-weight: bold;">✓ ${i}/5</p>`;
+if (response.ok) {
+  // Supprimer les anciens boutons
+  buttonsContainer.innerHTML = '';
+
+  // Créer l'élément loading
+  const loadingText = document.createElement('div');
+  loadingText.className = 'loading-text';
+  loadingText.innerHTML = 'Envoi en cours…'.split('').map(c => `<span>${c}</span>`).join('');
+  buttonsContainer.appendChild(loadingText);
+
+  // Attendre 1.5 seconde
+  setTimeout(() => {
+    voteStore.add(featureSlug, i);
+    buttonsContainer.innerHTML = `<p style="margin-top:0.5rem; color: var(--color-primary); font-weight: bold;">✓ ${i}/5</p>`;
+  }, 1200);
+
                   } else {
                     ratingButton.textContent = "Erreur";
                   }
